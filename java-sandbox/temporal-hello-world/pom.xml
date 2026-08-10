@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>...</groupId>
+    <artifactId>...</artifactId>
+    <version>...</version>
+<dependencies>
+<!--
+  Temporal dependencies needed to compile, build,
+  test, and run Temporal's Java SDK
+-->
+
+<!--
+  SDK
+-->
+
+<dependency>
+  <groupId>io.temporal</groupId>
+  <artifactId>temporal-sdk</artifactId>
+  <version>1.36.0</version>
+</dependency>
+
+<dependency>
+  <!--
+    Testing
+  -->
+  <groupId>io.temporal</groupId>
+  <artifactId>temporal-testing</artifactId>
+  <version>1.36.0</version>
+  <scope>test</scope>
+</dependency>
+
+  <dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>5.12.2</version>
+    <scope>test</scope>
+  </dependency>
+
+    <!-- Mockito Core Framework -->
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>5.12.0</version>
+        <scope>test</scope>
+    </dependency>
+    
+    <!-- Support for JUnit 5 Extensions -->
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>5.12.0</version>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+</project>

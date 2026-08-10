@@ -1,0 +1,6 @@
+*/.venv
+*/__pycache__
+*/.pytest_cache
+*/temporal-hello-world/target/*
+*/target/*
+*/node_modules
