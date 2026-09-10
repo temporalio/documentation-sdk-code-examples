@@ -1,0 +1,37 @@
+[project]
+name = "temporal-agentcore-durable-agent"
+version = "0.1.0"
+description = "A durable Strands agent running on Temporal Serverless Workers and Amazon Bedrock AgentCore Runtime"
+requires-python = ">=3.10"
+dependencies = [
+    "bedrock-agentcore>=1.9.1",
+    "strands-agents>=1.39.0",
+    "strands-agents-tools>=0.5.2",
+    "temporalio[pydantic,strands-agents]>=1.32.0,<2",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0,<2",
+    "pytest>=8.3.0,<9",
+    "pytest-asyncio>=0.25.0,<1",
+    "ruff>=0.11.0,<1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py310"
+extend-exclude = ["agentcore"]
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = ["agentcore/"]
