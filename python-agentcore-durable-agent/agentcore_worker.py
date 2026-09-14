@@ -74,10 +74,8 @@ class _TrackedActivity(ActivityInboundInterceptor):
 # @@@SNIPEND
 
 
-# @@@SNIPSTART python-agentcore-durable-agent-runtime-handler
-@app.entrypoint
-@app.async_task
-async def invoke(payload: dict) -> dict:
+async def run_worker() -> None:
+    """Poll until idle, then drain the Worker."""
     client = await Client.connect(
         required_env("TEMPORAL_ADDRESS"),
         namespace=required_env("TEMPORAL_NAMESPACE"),
@@ -110,7 +108,32 @@ async def invoke(payload: dict) -> dict:
         async with worker:
             await tracker.wait_until_idle(DEBOUNCE)
 
-    return {"message": "Worker drained"}
+    log.info("worker idle for %ss and drained", DEBOUNCE)
+
+
+# @@@SNIPSTART python-agentcore-durable-agent-runtime-handler
+_worker: asyncio.Task[None] | None = None
+
+
+async def _run_until_idle(task_id: int) -> None:
+    try:
+        await run_worker()
+    except Exception:
+        log.exception("worker failed in background task")
+    finally:
+        app.complete_async_task(task_id)
+
+
+@app.entrypoint
+async def invoke(payload: dict) -> dict:
+    global _worker
+    if _worker is not None and not _worker.done():
+        return {"message": "Worker already polling", "task_queue": TASK_QUEUE}
+
+    task_id = app.add_async_task("temporal-worker")
+    _worker = asyncio.create_task(_run_until_idle(task_id))
+
+    return {"message": "Worker starting", "task_queue": TASK_QUEUE}
 
 
 # @@@SNIPEND
