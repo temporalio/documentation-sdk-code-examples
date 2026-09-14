@@ -62,7 +62,19 @@ npm install -g @aws/agentcore
 ./bootstrap-agentcore-project.sh
 ```
 
-Replace the placeholders in `agentcore/aws-targets.json` and `agentcore/agentcore.json`. Do not commit a Temporal Cloud
-API key. Then follow the
+Populate `agentcore/aws-targets.json` and `agentcore/agentcore.json` from environment variables:
+
+```bash
+export TEMPORAL_ADDRESS="<namespace>.<account>.tmprl.cloud:7233"
+export TEMPORAL_NAMESPACE="<namespace>.<account>"
+printf "Temporal Cloud API key: "
+read -rs TEMPORAL_API_KEY
+printf "\n"
+export TEMPORAL_API_KEY
+export AWS_REGION="us-west-2"
+uv run python configure_agentcore.py
+```
+
+Do not commit a populated Temporal Cloud API key. Then follow the
 [AgentCore Serverless Worker deployment guide](https://docs.temporal.io/production-deployment/worker-deployments/serverless-workers/agentcore)
 to deploy the Runtime, create its invocation role, and configure the Worker Deployment Version.
