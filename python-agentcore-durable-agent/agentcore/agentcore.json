@@ -8,7 +8,7 @@
   },
   "runtimes": [
     {
-      "name": "temporal_durable_agent_worker",
+      "name": "durable_agent_worker",
       "description": "Durable Strands agent on a Temporal Serverless Worker",
       "build": "CodeZip",
       "entrypoint": "agentcore_worker.py",
