@@ -7,6 +7,9 @@ The application keeps one Strands conversation in a long-running Temporal Workfl
 Interpreter calls run as Activities. The local Worker runs continuously. The AgentCore Runtime handler runs the same
 Workflow and Activity code on serverless Worker compute and retires after an idle period.
 
+The Worker configures Strands to use Amazon Nova Lite through Amazon Bedrock. The explicit model selection avoids
+depending on Strands' default model, which can change between releases.
+
 When AgentCore invokes the Runtime, the handler starts the Worker in a background task and immediately returns an
 acknowledgment. AgentCore reports the Runtime as busy while the Worker runs and clears that status after the Worker
 drains or fails. A second invocation in the same Runtime session does not start another Worker.

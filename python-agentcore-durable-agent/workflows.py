@@ -11,6 +11,8 @@ with workflow.unsafe.imports_passed_through():
 TASK_QUEUE = "durable-agent"
 DEPLOYMENT_NAME = "durable-agent-agentcore"
 BUILD_ID = "1.0.0"
+MODEL_NAME = "nova-lite"
+MODEL_ID = "amazon.nova-lite-v1:0"
 
 SYSTEM_PROMPT = """You are a data-analysis assistant.
 Use execute_code for calculations and report the code and its output.
@@ -24,7 +26,7 @@ class DurableAgentWorkflow:
         self._done = False
         self._lock = asyncio.Lock()
         self._agent = TemporalAgent(
-            model="bedrock",
+            model=MODEL_NAME,
             start_to_close_timeout=timedelta(seconds=60),
             system_prompt=SYSTEM_PROMPT,
             tools=[

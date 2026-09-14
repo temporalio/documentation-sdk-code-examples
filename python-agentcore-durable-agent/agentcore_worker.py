@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
 
 from bedrock_agentcore.runtime import BedrockAgentCoreApp
+from strands.models import BedrockModel
 from temporalio.client import Client
 from temporalio.common import VersioningBehavior
 from temporalio.contrib.strands import StrandsPlugin
@@ -17,7 +18,14 @@ from temporalio.worker import (
 )
 
 from activities import execute_code
-from workflows import BUILD_ID, DEPLOYMENT_NAME, TASK_QUEUE, DurableAgentWorkflow
+from workflows import (
+    BUILD_ID,
+    DEPLOYMENT_NAME,
+    MODEL_ID,
+    MODEL_NAME,
+    TASK_QUEUE,
+    DurableAgentWorkflow,
+)
 
 app = BedrockAgentCoreApp()
 log = app.logger
@@ -81,7 +89,9 @@ async def run_worker() -> None:
         namespace=required_env("TEMPORAL_NAMESPACE"),
         api_key=required_env("TEMPORAL_API_KEY"),
         tls=True,
-        plugins=[StrandsPlugin()],
+        plugins=[
+            StrandsPlugin(models={MODEL_NAME: lambda: BedrockModel(model_id=MODEL_ID)})
+        ],
     )
     tracker = ActivityTracker()
 

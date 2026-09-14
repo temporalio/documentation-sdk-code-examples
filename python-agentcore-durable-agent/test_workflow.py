@@ -10,7 +10,7 @@ from temporalio.contrib.strands import StrandsPlugin
 from temporalio.testing import WorkflowEnvironment
 from temporalio.worker import Worker
 
-from workflows import DurableAgentWorkflow
+from workflows import MODEL_NAME, DurableAgentWorkflow
 
 
 class RecordingModel(Model):
@@ -46,7 +46,7 @@ async def test_conversation_survives_worker_replacement() -> None:
     async with await WorkflowEnvironment.start_time_skipping() as env:
         first_plugin = StrandsPlugin(
             models={
-                "bedrock": lambda: RecordingModel(
+                MODEL_NAME: lambda: RecordingModel(
                     "There are 28.", first_worker_messages
                 )
             }
@@ -74,7 +74,7 @@ async def test_conversation_survives_worker_replacement() -> None:
 
         second_plugin = StrandsPlugin(
             models={
-                "bedrock": lambda: RecordingModel(
+                MODEL_NAME: lambda: RecordingModel(
                     "Adding two gives 30.", second_worker_messages
                 )
             }
