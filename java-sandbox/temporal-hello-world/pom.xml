@@ -24,13 +24,23 @@
   <version>1.36.0</version>
 </dependency>
 
+<!--
+  Micrometer Prometheus registry, used with
+  MicrometerClientStatsReporter to export SDK metrics
+-->
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-registry-prometheus</artifactId>
+  <version>1.12.13</version>
+</dependency>
+
 <dependency>
   <!--
     Testing
   -->
   <groupId>io.temporal</groupId>
   <artifactId>temporal-testing</artifactId>
-  <version>1.36.0</version>
+  <version>1.38.0</version>
   <scope>test</scope>
 </dependency>
 

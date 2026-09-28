@@ -1,6 +1,6 @@
 use std::{collections::HashMap, time::Duration};
 
-use temporalio_macros::{workflow, workflow_methods};
+use temporalio_macros::{init, query, run, signal, update, update_validator};
 use temporalio_sdk::{ActivityOptions, SignalWorkflowOptions, SyncWorkflowContext, WorkflowContext, WorkflowContextView, WorkflowResult};
 use tokio::time::sleep;
 
@@ -27,7 +27,7 @@ pub struct GetLanguagesInput {
     pub include_unsupported: bool,
 }
 
-#[workflow(name = "greetings-workflow-10")]
+#[run(name = "greetings-workflow-10")]
 pub struct GreetingsWorkflow {
     pub greetings: HashMap<Language, String>,
     language: Language,
@@ -35,8 +35,6 @@ pub struct GreetingsWorkflow {
     approver_name: Option<String>,
 }
 
-
-#[workflow_methods]
 impl GreetingsWorkflow {
     #[init]
     fn new(_ctx: &WorkflowContextView) -> Self {

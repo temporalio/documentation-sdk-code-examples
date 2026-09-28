@@ -1,9 +1,10 @@
 use std::{str::FromStr, time::Duration};
 
-use temporalio_client::{Client, ClientOptions, Connection, ConnectionOptions, TlsOptions, WorkflowExecuteUpdateOptions, WorkflowGetResultOptions, WorkflowQueryOptions, WorkflowSignalOptions, WorkflowStartOptions, WorkflowStartSignal, WorkflowStartUpdateOptions, WorkflowTerminateOptions};
-use temporalio_common::{prost_dur, protos::temporal::api::common::v1::{Payload, Payloads, RetryPolicy}};
-use temporalio_sdk::{Worker, WorkerOptions};
-use temporalio_sdk_core::{CoreRuntime, RuntimeOptions, Url};
+use temporalio_client::{Client, ClientOptions, Connection, ConnectionOptions, WorkflowExecuteUpdateOptions, WorkflowGetResultOptions, WorkflowQueryOptions, WorkflowSignalOptions, WorkflowStartOptions, WorkflowStartSignal, WorkflowStartUpdateOptions, WorkflowTerminateOptions};
+use temporalio_common::{protos::temporal::api::common::v1::{Payload, Payloads, RetryPolicy}};
+use temporalio_sdk::{Runtime, Worker, WorkerOptions};
+use temporalio_sdk::runtime::RuntimeOptions;
+use temporalio_sdk_core::{Url};
 
 mod workflows;
 mod activities;
@@ -32,7 +33,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // })
         .build();
 
-    let runtime = CoreRuntime::new_assume_tokio(RuntimeOptions::builder().build()?)?;
+    let runtime = Runtime::new_assume_tokio(RuntimeOptions::builder().build()?)?;
 
     // Client setup
     let connection = Connection::connect(connection_options).await?;

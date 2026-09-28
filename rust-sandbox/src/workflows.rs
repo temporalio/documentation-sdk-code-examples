@@ -1,7 +1,7 @@
 use temporalio_common::prost_dur;
 use temporalio_common::protos::coresdk::workflow_commands::ContinueAsNewWorkflowExecution;
 use temporalio_common::{protos::temporal::api::common::v1::{RetryPolicy}};
-use temporalio_macros::{workflow, workflow_methods};
+use temporalio_macros::{run, workflow_methods};
 use temporalio_sdk::workflows::join;
 use temporalio_sdk::{ActivityOptions, WorkflowContext, WorkflowContextView, WorkflowResult, WorkflowTermination};
 use std::time::Duration;
@@ -15,7 +15,7 @@ pub struct GreetingInput {
     pub max_history_length: u32,
 }
 
-#[workflow(name = "greeting-workflow-1")]
+#[run(name = "greeting-workflow-1")]
 pub struct GreetingWorkflow {
     pub name: String,
     pub max_history_length: u32,
@@ -35,7 +35,7 @@ impl GreetingWorkflow {
     pub async fn run(ctx: &mut WorkflowContext<Self>) -> WorkflowResult<String> {
         let name = ctx.state(|s| s.name.clone());
         // Execute an activity
-        let greeting = ctx.start_activity(
+        let greeting = ctx.execute_activity(
             MyActivities::greet,
             name,
             ActivityOptions::start_to_close_timeout(Duration::from_secs(30))
