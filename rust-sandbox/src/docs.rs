@@ -1,5 +1,5 @@
 use temporalio_macros::{workflow, workflow_methods};
-use temporalio_sdk::{WorkflowResult, WorkflowContextView};
+use temporalio_sdk::{WorkflowContext, WorkflowResult, WorkflowContextView};
 
 #[workflow]
 pub struct YourBasicWorkflow {
@@ -14,7 +14,7 @@ impl YourBasicWorkflow {
     }
 
     #[run]
-    async fn run(ctx: &mut WorkflowContext<Self>) -> WorkflowResult<String> {
+    pub async fn run(_ctx: &mut WorkflowContext<Self>) -> WorkflowResult<String> {
         // ...
         Ok(String::new())
     }

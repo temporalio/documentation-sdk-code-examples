@@ -1,10 +1,7 @@
 use std::{str::FromStr, time::Duration};
 
-use temporalio_client::{Client, ClientOptions, Connection, ConnectionOptions, WorkflowExecuteUpdateOptions, WorkflowGetResultOptions, WorkflowQueryOptions, WorkflowSignalOptions, WorkflowStartOptions, WorkflowStartSignal, WorkflowStartUpdateOptions, WorkflowTerminateOptions};
-use temporalio_common::{protos::temporal::api::common::v1::{Payload, Payloads, RetryPolicy}};
+use temporalio_client::{Client, ClientOptions, Connection, ConnectionOptions, RetryPolicy, RpcOptions, Url, WorkflowExecuteUpdateOptions, WorkflowGetResultOptions, WorkflowQueryOptions, WorkflowSignalOptions, WorkflowStartOptions, WorkflowStartUpdateOptions, WorkflowTerminateOptions};
 use temporalio_sdk::{Runtime, Worker, WorkerOptions};
-use temporalio_sdk::runtime::RuntimeOptions;
-use temporalio_sdk_core::{Url};
 
 mod workflows;
 mod activities;
@@ -23,17 +20,9 @@ use crate::{activities::MyActivities, workflow_messaging::{ApproveInput, GetLang
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Connect to local Temporal server
+    let runtime = Runtime::from_current_tokio(Default::default())?;
     let connection_options =
-        ConnectionOptions::new(Url::from_str("http://localhost:7233")?)
-        .api_key("your_api_key")
-        // If your Temporal server is configured to use TLS, you can set the TLS options here. For example, you can specify the path to the CA certificate, client certificate, and client key.
-        // .tls_options(TlsOptions {
-        //     ..Default::default()
-        // })
-        .build();
-
-    let runtime = Runtime::new_assume_tokio(RuntimeOptions::builder().build()?)?;
+        ConnectionOptions::new(Url::from_str("http://localhost:7233")?).build();
 
     // Client setup
     let connection = Connection::connect(connection_options).await?;
@@ -50,13 +39,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .execution_timeout(Duration::from_secs(3600))
         .run_timeout(Duration::from_secs(600))
         .task_timeout(Duration::from_secs(10))
-        .retry_policy(RetryPolicy {
-            initial_interval: Some(prost_dur!(from_secs(1))),
-            backoff_coefficient: 2.0,
-            maximum_interval: Some(prost_dur!(from_secs(100))),
-            maximum_attempts: 5,
-            non_retryable_error_types: vec!["NonRetryableError".to_string()],
-        }).build()
+        .retry_policy(
+            RetryPolicy::builder()
+                .initial_interval(Duration::from_secs(1))
+                .backoff_coefficient(2.0)
+                .maximum_interval(Duration::from_secs(100))
+                .maximum_attempts(5)
+                .non_retryable_error_types(["NonRetryableError"])
+                .build()
+        ).build()
     ).await?;
 
     let handle = client
@@ -79,21 +70,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         WorkflowStartUpdateOptions::default()
     ).await?;
 
-    let update_result = update_handle.get_result().await?;
+    let _update_result = update_handle.get_result(RpcOptions::default()).await?;
 
-    let wf_start_with_signal_input = Payloads {
-        payloads: vec![Payload::from("Ziggy".to_string())],
-    };
-
-    // This is an example of starting a workflow with a signal. The workflow will not start executing until the signal is received. You can trigger the signal using the Temporal CLI or another client.
-    let wf_start_with_signal_handle = client.start_workflow(
+    // This is an example of starting a workflow with a signal. The signal is delivered atomically with the start, before the workflow's first task runs.
+    let _wf_start_with_signal_handle = client.signal_with_start_workflow(
         GreetingsWorkflow::run,
         (),
-        WorkflowStartOptions::new("my-task-queue", "greetings-workflow-10")
-            .start_signal(
-                WorkflowStartSignal::new("approve")
-                .input(wf_start_with_signal_input).build(),
-            ).build(),
+        GreetingsWorkflow::approve,
+        ApproveInput { name: "Ziggy".to_string() },
+        WorkflowStartOptions::new("my-task-queue", "greetings-workflow-10").build(),
     ).await?;
 
     // This is an example of how to terminate a workflow. You can use this to immediately stop a workflow that is no longer needed or to stop a workflow that is stuck or taking too long to complete.
@@ -107,10 +92,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     let worker_options = WorkerOptions::new("my-task-queue")
         .register_activities(MyActivities)
-        .register_workflow::<GreetingsWorkflow>()
+        .register_workflow::<GreetingsWorkflow>()?
         .build();
 
-    Worker::new(&runtime, client, worker_options)?.run().await?;
+    let mut worker = Worker::new(&runtime, client, worker_options)?;
+    worker.run().await?;
 
     let supported_languages = main_wf_handle.query(
         GreetingsWorkflow::get_languages, 

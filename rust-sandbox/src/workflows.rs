@@ -1,13 +1,9 @@
-use temporalio_common::prost_dur;
-use temporalio_common::protos::coresdk::workflow_commands::ContinueAsNewWorkflowExecution;
-use temporalio_common::{protos::temporal::api::common::v1::{RetryPolicy}};
-use temporalio_macros::{run, workflow_methods};
-use temporalio_sdk::workflows::join;
-use temporalio_sdk::{ActivityOptions, WorkflowContext, WorkflowContextView, WorkflowResult, WorkflowTermination};
+use temporalio_macros::{workflow, workflow_methods};
+use temporalio_sdk::{ActivityOptions, ContinueAsNewOptions, WorkflowContext, WorkflowContextView, WorkflowResult};
 use std::time::Duration;
 use serde::{Serialize, Deserialize};
 
-use crate::{activities::{ActivityLanguages, MyActivities}, workflow_messaging::Language};
+use crate::activities::MyActivities;
 
 #[derive(Serialize, Deserialize)]
 pub struct GreetingInput {
@@ -15,7 +11,7 @@ pub struct GreetingInput {
     pub max_history_length: u32,
 }
 
-#[run(name = "greeting-workflow-1")]
+#[workflow]
 pub struct GreetingWorkflow {
     pub name: String,
     pub max_history_length: u32,
@@ -31,7 +27,7 @@ impl GreetingWorkflow {
         }
     }
 
-    #[run]
+    #[run(name = "greeting-workflow-1")]
     pub async fn run(ctx: &mut WorkflowContext<Self>) -> WorkflowResult<String> {
         let name = ctx.state(|s| s.name.clone());
         // Execute an activity
@@ -46,36 +42,35 @@ impl GreetingWorkflow {
         if greeting.contains("Ziggy") {
             Ok(greeting)
         } else {
-            let new_input = "New Name".to_string();
-            // To continue as new, return an error with WorkflowTermination::ContinueAsNew
-            Err(WorkflowTermination::continue_as_new(ContinueAsNewWorkflowExecution {
-                workflow_type: "MyWorkflow".to_string(),
-                arguments: vec![new_input.into()],
-                ..Default::default()
-            }))
+            let new_input = GreetingInput {
+                name: "New Name".to_string(),
+                max_history_length: ctx.state(|s| s.max_history_length),
+            };
+            // To continue as new, call ctx.continue_as_new and propagate the returned error
+            match ctx.continue_as_new(new_input, ContinueAsNewOptions::default())? {}
         }
 
         // let name = ctx.state(|s| s.name.clone());
         // // Execute an activity
-        // let greeting = ctx.start_activity(
+        // let greeting = ctx.execute_activity(
         //     MyActivities::greet,
         //     name,
         //     ActivityOptions::start_to_close_timeout(Duration::from_secs(30))
         // );
 
-        // let language = ctx.start_activity(
+        // let language = ctx.execute_activity(
         //     MyActivities::call_greeting_service,
         //     ActivityLanguages::English,
         //     ActivityOptions::with_start_to_close_timeout(Duration::from_secs(30))
         //         .heartbeat_timeout(Duration::from_secs(5))
         //         .retry_policy(
-        //             RetryPolicy {
-        //                 initial_interval: Some(prost_dur!(from_secs(10))), 
-        //                 backoff_coefficient: 2.0, 
-        //                 maximum_interval: Some(prost_dur!(from_secs(100))), 
-        //                 maximum_attempts: 5, 
-        //                 non_retryable_error_types: vec!["NonRetryableError".to_string()]
-        //             }
+        //             RetryPolicy::builder()
+        //                 .initial_interval(Duration::from_secs(10))
+        //                 .backoff_coefficient(2.0)
+        //                 .maximum_interval(Duration::from_secs(100))
+        //                 .maximum_attempts(5)
+        //                 .non_retryable_error_types(["NonRetryableError"])
+        //                 .build()
         //         ).build()
         // );
 
@@ -87,14 +82,10 @@ impl GreetingWorkflow {
         // if greeting.contains("Ziggy") {
         //     Ok(greeting)
         // } else {
-        //     let new_input = "New Name".to_string();
+        //     let new_input = GreetingInput { name: "New Name".to_string(), max_history_length: 0 };
 
-        //     // To continue as new, return an error with WorkflowTermination::ContinueAsNew
-        //     Err(WorkflowTermination::continue_as_new(ContinueAsNewWorkflowExecution {
-        //         workflow_type: "MyWorkflow".to_string(),
-        //         arguments: vec![new_input.into()],
-        //         ..Default::default()
-        //     }))
+        //     // To continue as new, call ctx.continue_as_new and propagate the returned error
+        //     match ctx.continue_as_new(new_input, ContinueAsNewOptions::default())? {}
         // }
     }
 

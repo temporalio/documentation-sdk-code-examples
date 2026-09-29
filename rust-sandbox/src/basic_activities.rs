@@ -1,6 +1,6 @@
 use std::{sync::Arc, time::Duration};
 
-use temporalio_sdk::activities::{ActivityContext, ActivityError};
+use temporalio_sdk::{ApplicationFailure, activities::{ActivityContext, ActivityError}};
 use temporalio_macros::activities;
 use tokio::sync::Semaphore;
 
@@ -36,17 +36,17 @@ impl GreetingActivities {
     ) -> Result<ProcessedData, ActivityError> {
         // If an error should be retried
         if !validate_input(&input) {
-            return Err(ActivityError::Retryable { 
-                source: "Invalid input format".into(), 
-                explicit_delay: Some(Duration::from_secs(5)) 
-            });
+            return Err(ApplicationFailure::builder("Invalid input format")
+                .next_retry_delay(Duration::from_secs(5))
+                .build()
+                .into());
         }
 
         // If an error should not be retried
         if input.len() > 1000000 {
-            return Err(ActivityError::NonRetryable(
-                "Input too large".into()
-            ));
+            return Err(
+                ApplicationFailure::non_retryable("Input too large").into(),
+            );
         }
 
         let result = ProcessedData {
@@ -58,14 +58,14 @@ impl GreetingActivities {
 }
 
 // Example of activity that uses Arc
-struct SleeperActivities {
+pub struct SleeperActivities {
     acts_started: Arc<Semaphore>,
     acts_done: Arc<Semaphore>,
 }
 #[activities]
 impl SleeperActivities {
     #[activity]
-    async fn sleeper(
+    pub async fn sleeper(
         self: Arc<Self>,
         ctx: ActivityContext,
         _: String,
