@@ -1,8 +1,8 @@
 use temporalio_macros::{activities};
-use temporalio_sdk::activities::{ActivityContext, ActivityError};
-use std::sync::{Arc, atomic::{AtomicUsize, Ordering}};
+use temporalio_sdk::{ApplicationFailure, activities::{ActivityContext, ActivityError}};
+use std::{sync::{Arc, atomic::{AtomicUsize, Ordering}}};
 
-struct TestGreetActivities {
+pub struct TestGreetActivities {
     counter: AtomicUsize,
 }
 
@@ -10,16 +10,13 @@ struct TestGreetActivities {
 impl TestGreetActivities {
     #[activity]
     pub async fn greet(ctx: ActivityContext, name: String) -> Result<String, ActivityError> {
-        ctx.record_heartbeat(vec!["greet activity started".into()]);
+        ctx.record_heartbeat("greet activity started".to_string())
+            .await?;
 
         if name == "ziggy" {
-            return Err(ActivityError::Retryable {
-                source: "Ziggy is not a valid name".into(),
-                // next retry will be after 5 seconds
-                explicit_delay: Some(std::time::Duration::from_secs(5)),
-            });
+            return Err(ApplicationFailure::new("Ziggy is not a valid name").into());
         }
-        
+
         Ok(format!("Hello, {}!", name))
     }
 

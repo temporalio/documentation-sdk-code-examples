@@ -2,7 +2,6 @@ use std::{collections::HashMap, time::Duration};
 
 use temporalio_macros::{workflow, workflow_methods};
 use temporalio_sdk::{ActivityOptions, SignalWorkflowOptions, SyncWorkflowContext, WorkflowContext, WorkflowContextView, WorkflowResult};
-use tokio::time::sleep;
 
 use crate::{activities::{ActivityLanguages, MyActivities}};
 
@@ -27,14 +26,13 @@ pub struct GetLanguagesInput {
     pub include_unsupported: bool,
 }
 
-#[workflow(name = "greetings-workflow-10")]
+#[workflow]
 pub struct GreetingsWorkflow {
     pub greetings: HashMap<Language, String>,
     language: Language,
     approved_for_release: bool,
     approver_name: Option<String>,
 }
-
 
 #[workflow_methods]
 impl GreetingsWorkflow {
@@ -43,26 +41,33 @@ impl GreetingsWorkflow {
         let mut greetings = HashMap::new();
         greetings.insert(Language::Chinese, "你好，世界".to_string());
         greetings.insert(Language::English, "Hello, world".to_string());
-        
+
         Self {greetings, language: Language::English, approved_for_release: false, approver_name: None }
     }
 
-    #[run]
+    #[run(name = "greetings-workflow-10")]
     pub async fn run(ctx: &mut WorkflowContext<Self>) -> WorkflowResult<String> {
         let name = ctx.state(|s| s.greetings.clone());
 
-        ctx.wait_condition(|s| !s.approved_for_release).await;
+        ctx.wait_condition(|s| !s.approved_for_release).await?;
 
         // This is an example of sending a signal from within a workflow. You can trigger this signal using the Temporal CLI or another client, and it will be received and processed by the workflow while it's running.
-        let signal_res = ctx.signal_workflow(SignalWorkflowOptions::new(
-            "greetings-workflow-10",
-            "019dbc0c-1bff-745d-8af8-eda45a598533",
-            "approve",
-            serde_json::to_vec(&ApproveInput {
-                name: "Ziggy".to_string(),
-            }),
-        )).await;
-        sleep(Duration::from_millis(60 * 1000)).await;
+        let _signal_res = ctx
+            .external_workflow(
+                "greetings-workflow-10",
+                Some("019dbc0c-1bff-745d-8af8-eda45a598533".to_string()),
+            )
+            .signal(
+                GreetingsWorkflow::approve,
+                ApproveInput {
+                    name: "Ziggy".to_string(),
+                },
+                SignalWorkflowOptions::default(),
+            )
+            .await;
+
+        // Use a durable timer instead of tokio::time::sleep inside workflows
+        ctx.timer(Duration::from_secs(60)).await;
 
         Ok(format!("Hola: {:?}", name))
     }
@@ -75,7 +80,7 @@ impl GreetingsWorkflow {
             self.greetings.keys().copied().collect()
         }
     }
-    
+
     #[signal]
     pub fn approve(&mut self, _ctx: &mut SyncWorkflowContext<Self>, input: ApproveInput) {
         self.approved_for_release = true;
@@ -90,7 +95,7 @@ impl GreetingsWorkflow {
     ) -> Language {
         let previous_language = self.language;
         self.language = input.language;
-        
+
         previous_language
     }
 
@@ -99,38 +104,32 @@ impl GreetingsWorkflow {
     async fn set_language_activity(
         ctx: &mut WorkflowContext<Self>,
         language: Language,
-    ) -> Language {
+    ) -> Result<Language, Box<dyn std::error::Error + Send + Sync>> {
         let needs_greeting = ctx.state(|s| !s.greetings.contains_key(&language));
 
         if needs_greeting {
             // Serialize concurrent executions so updates are processed in order.
-            ctx.wait_condition(|s| !s.approved_for_release).await;
-            let needs_approval = ctx.state(|s| s.approved_for_release);
-            while !needs_approval {
-                sleep(Duration::from_secs(100));
-            }
+            ctx.wait_condition(|s| !s.approved_for_release).await?;
             ctx.state_mut(|s| {
                 s.approved_for_release = true;
             });
 
-            let result = async {
-                let greeting = ctx.start_activity(
-                    MyActivities::call_greeting_service, 
+            let greeting = ctx
+                .execute_activity(
+                    MyActivities::call_greeting_service,
                     ActivityLanguages::French,
-                    ActivityOptions::default()
-                ).await;
-
-                ctx.state_mut(|s| {
-                    s.greetings.insert(language, greeting.unwrap());
-                });
-            }
-            .await;
+                    ActivityOptions::start_to_close_timeout(Duration::from_secs(10)),
+                )
+                .await;
 
             ctx.state_mut(|s| {
                 s.approved_for_release = false;
             });
 
-            result;
+            let greeting = greeting?;
+            ctx.state_mut(|s| {
+                s.greetings.insert(language, greeting);
+            });
         }
 
         let previous_language = ctx.state(|s| s.language);
@@ -139,7 +138,7 @@ impl GreetingsWorkflow {
             s.language = language;
         });
 
-        previous_language
+        Ok(previous_language)
     }
 
     #[update_validator(set_language)]

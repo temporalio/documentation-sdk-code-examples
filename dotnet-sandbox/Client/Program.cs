@@ -1,6 +1,5 @@
 ﻿using MyNamespace;
 using Temporalio.Client;
-using Temporalio.Workflows;
 
 // Create a client to localhost on "default" namespace
 var interceptor = new SimpleWorkerInterceptor();

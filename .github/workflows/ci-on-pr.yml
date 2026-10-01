@@ -1,0 +1,122 @@
+name: Compile check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dotnet:
+    name: .NET
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dotnet-sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "9.0.x"
+      - run: dotnet build temporaliodotnethelloworld.sln --configuration Release
+
+  go:
+    name: Go
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: go-sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go-sandbox/go.mod
+          cache-dependency-path: go-sandbox/go.sum
+      - run: go build ./...
+      # Compiles test files too, without running them
+      - run: go vet ./...
+
+  java:
+    name: Java
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: java-sandbox/temporal-hello-world
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+          cache-dependency-path: java-sandbox/temporal-hello-world/pom.xml
+      # pom.xml doesn't pin a compiler release, so set one here
+      - run: mvn -B test-compile -Dmaven.compiler.release=21
+
+  python:
+    name: Python
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: python-sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m compileall -q -x '/\.venv/' .
+
+  ruby:
+    name: Ruby
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ruby-sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+      - run: |
+          status=0
+          for f in $(find . -name '*.rb'); do
+            ruby -wc "$f" || status=1
+          done
+          exit $status
+
+  rust:
+    name: Rust
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rust-sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: arduino/setup-protoc@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust-sandbox
+      - run: cargo check --all-targets --locked
+
+  typescript:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: typescript-sandbox
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: typescript-sandbox/.nvmrc
+          cache: npm
+          cache-dependency-path: typescript-sandbox/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit

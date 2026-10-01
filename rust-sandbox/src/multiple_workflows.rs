@@ -1,4 +1,3 @@
-use temporalio_common::protos::{temporal::api::common::v1::Payload};
 use temporalio_macros::{workflow, workflow_methods};
 use temporalio_sdk::{ChildWorkflowOptions, WorkflowContext, WorkflowContextView, WorkflowResult};
 
@@ -58,30 +57,22 @@ impl ComposeGreetingWorkflow {
     pub async fn run(ctx: &mut WorkflowContext<Self>) -> WorkflowResult<Vec<Option<String>>> {
         let name = ctx.state(|s| s.name.clone());
 
-        let input = vec![
-            Payload {
-                data: name.as_bytes().to_vec(),
-                ..Default::default()
-            }
-        ];
-        let greeting_opts = ChildWorkflowOptions {
-            input,
-            workflow_id: "compose-greeting-child-workflow-id".to_string(),
-            workflow_type: "ComposeGreetingWorkflow".to_string(),
-            ..Default::default()
-        };
+        let en_greeting_child = ctx.start_child_workflow(
+            ComposeEnGreetingWorkflow::run,
+            name.clone(),
+            ChildWorkflowOptions::workflow_id("compose-greeting-child-workflow-id".to_string()),
+        ).await?;
+        let es_greeting_child = ctx.start_child_workflow(
+            ComposeEsGreetingWorkflow::run,
+            name.clone(),
+            ChildWorkflowOptions::workflow_id("compose-spanish-greeting-child-workflow-id".to_string()),
+        ).await?;
 
-        let en_greeting_child = ctx.child_workflow(greeting_opts.clone()).start().await.into_started().unwrap();
-        let es_greeting_child = ctx.child_workflow(ChildWorkflowOptions {
-            workflow_id: "compose-spanish-greeting-child-workflow-id".to_string(),
-            ..greeting_opts.clone()
-        }).start().await.into_started().unwrap();
-        
-        let en_result = en_greeting_child.result().await.status.map(|s| format!("{:?}", s));
-        let es_result = es_greeting_child.result().await.status.map(|s| format!("{:?}", s));
+        let en_result = en_greeting_child.result().await.ok();
+        let es_result = es_greeting_child.result().await.ok();
 
         let combined = vec![en_result, es_result];
-        
+
         Ok(combined)
     }
 }
