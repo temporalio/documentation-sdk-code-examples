@@ -21,10 +21,12 @@ description.
   user has given you, or leave the link as a placeholder for the docs writer to
   fill in.
 - When a code block is meant to be embedded in a doc page, wrap it in Snipsync
-  markers: `// @@@SNIPSTART <name>` ... `// @@@SNIPEND` (`#` for Python). Names
+  markers: `// @@@ SNIPSTART <name>` ... `// @@@ SNIPEND` (`#` for Python).
+  Remove the space after `@@@` in source files. Examples here include that
+  space so Snipsync does not extract snippets from this guide. Names
   must be globally unique in the repo, using `<language>-<topic>-<detail>`
   (e.g. `java-s3-driver-create`). Don't reuse or guess a name that isn't
-  explicitly given — check for collisions with `grep -r "@@@SNIPSTART" .` first.
+  explicitly given — check for collisions with `rg '@{3}SNIPSTART' .` first.
 - Before opening a PR, run the target language's local commands and paste them
   into the PR description:
 
