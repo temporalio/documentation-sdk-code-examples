@@ -45,11 +45,14 @@ snippet **name is the join key** — the docs repo has a `<!--SNIPSTART name-->`
 `<!--SNIPEND-->` placeholder in the target `.mdx` page, and Snipsync (run on the
 docs-repo side) copies the code across by matching names.
 
+The example below includes a space after `@@@` so Snipsync does not extract it
+as a real snippet. Remove that space in source files.
+
 ```java
-// @@@SNIPSTART java-s3-driver-create
+// @@@ SNIPSTART java-s3-driver-create
 S3AsyncClient s3Client = S3AsyncClient.builder().region(Region.US_EAST_2).build();
 ...
-// @@@SNIPEND
+// @@@ SNIPEND
 ```
 
 Use `#` instead of `//` for Python. Naming convention: `<language>-<topic>-<detail>`,
