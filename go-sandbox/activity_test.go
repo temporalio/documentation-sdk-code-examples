@@ -54,29 +54,29 @@ func (s *ActivityTestSuite) Test_HeatbeatActivity() {
 }
 
 func (s *UnitTestSuite) Test_CancelActivity() {
-    testSuite := &testsuite.WorkflowTestSuite{}
-    env := testSuite.NewTestActivityEnvironment()
+	testSuite := &testsuite.WorkflowTestSuite{}
+	env := testSuite.NewTestActivityEnvironment()
 
-    ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
 
-    env.SetWorkerOptions(worker.Options{
-        BackgroundActivityContext: ctx,
-    })
-    env.RegisterActivity(Greet)
+	env.SetWorkerOptions(worker.Options{
+		BackgroundActivityContext: ctx,
+	})
+	env.RegisterActivity(Greet)
 
-    done := make(chan struct{})
+	done := make(chan struct{})
 
-    go func() {
-        defer close(done)
-        // Cancel the activity after 5s
-        time.Sleep(5 * time.Second)
-        cancel()
-    }()
+	go func() {
+		defer close(done)
+		// Cancel the activity after 5s
+		time.Sleep(5 * time.Second)
+		cancel()
+	}()
 
-    _, err := env.ExecuteActivity(Greet, "Temporal")
+	_, err := env.ExecuteActivity(Greet, "Temporal")
 
-    <-done
-    
-    // Expect the activity to return a cancled error
-    s.Error(err)
+	<-done
+
+	// Expect the activity to return a cancled error
+	s.Error(err)
 }

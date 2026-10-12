@@ -1,5 +1,5 @@
 // @@@SNIPSTART go-activities-execution-workflow
-package activities
+package basics
 
 import (
 	"time"
@@ -67,3 +67,7 @@ func YourWorkflowDefinition(ctx workflow.Context, param YourWorkflowParam) (*You
 }
 
 // @@@SNIPEND
+
+func YourSimpleWorkflowDefinition(ctx workflow.Context) error {
+	return nil
+}
