@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: java-sandbox/temporal-hello-world
+        working-directory: java-sandbox
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -53,9 +53,17 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
-          cache-dependency-path: java-sandbox/temporal-hello-world/pom.xml
-      # pom.xml doesn't pin a compiler release, so set one here
-      - run: mvn -B test-compile -Dmaven.compiler.release=21
+          cache-dependency-path: java-sandbox/*/pom.xml
+      # Each subfolder is its own Maven module with no parent POM, so compile
+      # them one at a time. Force a single compiler release across modules.
+      - run: |
+          status=0
+          for pom in */pom.xml; do
+            echo "::group::${pom%/pom.xml}"
+            mvn -B -f "$pom" test-compile -Dmaven.compiler.release=21 || status=1
+            echo "::endgroup::"
+          done
+          exit $status
 
   python:
     name: Python
