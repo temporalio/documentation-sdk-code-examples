@@ -3,8 +3,9 @@
 This repo holds standalone SDK sample projects that get pulled into pages on
 [docs.temporal.io](https://docs.temporal.io) via a snippet-extraction tool
 ("Snipsync"). Each language lives in its own top-level `*-sandbox/` folder and is
-otherwise independent — there's no shared build tooling, and no CI in this repo.
-Validation is manual, per-project, and reported in the PR description.
+otherwise independent — there's no shared build tooling. A compile-only CI check
+runs on every PR (see [CI checks](#ci-checks)), but it doesn't run tests, so
+local validation is still required and must be reported in the PR description.
 
 ## Repo layout
 
@@ -13,6 +14,7 @@ Validation is manual, per-project, and reported in the PR description.
 | `go-sandbox/` | Go SDK sample, flat files + `_test.go` siblings |
 | `java-sandbox/` | Independent Maven projects, one per sample (e.g. `temporal-hello-world/`, `external-storage/`) |
 | `python-sandbox/` | Flat Python sample files |
+| `ruby-sandbox/` | Flat Ruby sample files with a `Gemfile` |
 | `rust-sandbox/` | One Cargo crate, topic-per-file |
 | `typescript-sandbox/` | TS sample (npm project) |
 | `dotnet-sandbox/` | `.sln` with one `.csproj` per project (Client/Worker/Workflow) |
@@ -29,8 +31,8 @@ Validation is manual, per-project, and reported in the PR description.
 4. Wrap each code block the doc page will embed in Snipsync markers (see below),
    using descriptive, globally-unique names.
 5. Run the language's normal build/test/lint commands locally (see table below) —
-   there is no CI to catch issues — and note the exact commands run in the PR
-   description.
+   CI only checks that the code compiles — and note the exact commands run in the
+   PR description.
 6. Optionally add a short README in the sample linking the docs.temporal.io guide
    by URL, e.g. "This sample supports the Temporal guide [Guide title](https://docs.temporal.io/...)."
 7. Open the PR against `main` here, and coordinate a companion PR in the
@@ -52,14 +54,14 @@ S3AsyncClient s3Client = S3AsyncClient.builder().region(Region.US_EAST_2).build(
 // @@@SNIPEND
 ```
 
-Use `#` instead of `//` for Python. Naming convention: `<language>-<topic>-<detail>`,
+Use `#` instead of `//` for Python and Ruby. Naming convention: `<language>-<topic>-<detail>`,
 e.g. `java-s3-driver-create` (see
 [java-sandbox/external-storage/src/main/java/io/temporal/docs/externalstorage/S3StorageDriverExamples.java](java-sandbox/external-storage/src/main/java/io/temporal/docs/externalstorage/S3StorageDriverExamples.java)).
 
 ## Testing/validation per language
 
-There's no CI — run these locally before opening a PR, and list the commands you
-ran in the PR description:
+CI doesn't run tests — run these locally before opening a PR, and list the
+commands you ran in the PR description:
 
 | Language | Commands |
 |---|---|
@@ -67,8 +69,32 @@ ran in the PR description:
 | Go | `go test ./...` |
 | Java | `mvn verify` (add JUnit 5 + Mockito tests under `src/test/java/` where practical) |
 | Python | `pytest` (use `WorkflowEnvironment`/`ActivityEnvironment` for workflow/activity tests) |
+| Ruby | `ruby -wc <file>.rb` for each file you changed |
 | Rust | `cargo build`, `cargo test` |
 | .NET | `dotnet build` |
+
+## CI checks
+
+The **Compile check** workflow ([.github/workflows/ci-on-pr.yml](.github/workflows/ci-on-pr.yml))
+runs on every PR and every push to `main`. It has one job per language, and every
+job runs regardless of which folder changed, so a break in any sandbox fails the
+check.
+
+| Job | What it runs |
+|---|---|
+| .NET | `dotnet build temporaliodotnethelloworld.sln --configuration Release` (.NET 9) |
+| Go | `go build ./...`, `go vet ./...` (version from `go.mod`) |
+| Java | `mvn -B -f <module>/pom.xml test-compile -Dmaven.compiler.release=21` for each `*/pom.xml` (JDK 21) |
+| Python | `python -m compileall -q -x '/\.venv/' .` (Python 3.13) |
+| Ruby | `ruby -wc` on every `.rb` file (Ruby 3.3) |
+| Rust | `cargo check --all-targets --locked` (stable, with `protoc`) |
+| TypeScript | `npm ci`, `npx tsc --noEmit` (version from `.nvmrc`) |
+
+CI compiles test files but never runs tests, and Python/Ruby only get a syntax
+check. Keep Java code at Java 21 or lower, and commit updated lockfiles
+(`Cargo.lock`, `package-lock.json`) with any dependency change, since CI uses
+`--locked` and `npm ci`. If you add a new sandbox folder or a Java module that
+needs different settings, update the workflow in the same PR.
 
 ## Pull requests
 
