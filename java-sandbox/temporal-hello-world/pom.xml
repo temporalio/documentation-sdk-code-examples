@@ -5,10 +5,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>...</groupId>
-    <artifactId>...</artifactId>
-    <version>...</version>
-<dependencies>
+    <groupId>io.temporal.docs</groupId>
+    <artifactId>temporal-hello-world</artifactId>
+    <version>1.0.0</version>
+
+    <dependencies>
 <!--
   Temporal dependencies needed to compile, build,
   test, and run Temporal's Java SDK
@@ -17,21 +18,54 @@
 <!--
   SDK
 -->
-<dependencies>
+
+<dependency>
+  <groupId>io.temporal</groupId>
+  <artifactId>temporal-sdk</artifactId>
+  <version>1.40.0</version>
+</dependency>
+
+<!--
+  Micrometer Prometheus registry, used with
+  MicrometerClientStatsReporter to export SDK metrics
+-->
+<dependency>
+  <groupId>io.micrometer</groupId>
+  <artifactId>micrometer-registry-prometheus</artifactId>
+  <version>1.16.0</version>
+</dependency>
+
+<dependency>
+  <!--
+    Testing
+  -->
+  <groupId>io.temporal</groupId>
+  <artifactId>temporal-testing</artifactId>
+  <version>1.38.0</version>
+  <scope>test</scope>
+</dependency>
+
   <dependency>
-    <groupId>io.temporal</groupId>
-    <artifactId>temporal-sdk</artifactId>
-    <version>1.39.0</version>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>6.1.1</version>
+    <scope>test</scope>
   </dependency>
-  <dependency>
-    <groupId>io.temporal</groupId>
-    <artifactId>temporal-payload-storage-s3driver</artifactId>
-    <version>1.39.0</version>
-  </dependency>
-  <dependency>
-    <groupId>io.temporal</groupId>
-    <artifactId>temporal-payload-storage-s3driver-awssdkv2</artifactId>
-    <version>1.39.0</version>
-  </dependency>
+
+    <!-- Mockito Core Framework -->
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>5.24.0</version>
+        <scope>test</scope>
+    </dependency>
+    
+    <!-- Support for JUnit 5 Extensions -->
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>5.24.0</version>
+        <scope>test</scope>
+    </dependency>
 </dependencies>
 </project>
