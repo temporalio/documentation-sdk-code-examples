@@ -1,3 +1,4 @@
+// @@@SNIPSTART go-quickstart-start-workflow
 package main
 
 import (

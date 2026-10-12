@@ -1,3 +1,4 @@
+// @@@SNIPSTART go-quickstart-worker
 package main
 
 import (
@@ -26,3 +27,4 @@ func main() {
 		log.Fatalln("Unable to start worker", err)
 	}
 }
+// @@@SNIPEND
