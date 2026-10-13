@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	quickstart "my-org/greeting/quickstart"
+
 	"github.com/stretchr/testify/suite"
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/converter"
@@ -38,7 +40,7 @@ func (s *ActivityTestSuite) Test_HeatbeatActivity() {
 	testSuite := &testsuite.WorkflowTestSuite{}
 	env := testSuite.NewTestActivityEnvironment()
 
-	env.RegisterActivity(Greet)
+	env.RegisterActivity(quickstart.Greet)
 	var heartBeatCount int
 	env.SetOnActivityHeartbeatListener(func(activityInfo *activity.Info, details converter.EncodedValues) {
 		var val string
@@ -48,7 +50,7 @@ func (s *ActivityTestSuite) Test_HeatbeatActivity() {
 		heartBeatCount++
 	})
 
-	_, err := env.ExecuteActivity(Greet, "Temporal")
+	_, err := env.ExecuteActivity(quickstart.Greet, "Temporal")
 	s.NoError(err)
 	s.Equal(1, heartBeatCount)
 }
@@ -62,7 +64,7 @@ func (s *UnitTestSuite) Test_CancelActivity() {
 	env.SetWorkerOptions(worker.Options{
 		BackgroundActivityContext: ctx,
 	})
-	env.RegisterActivity(Greet)
+	env.RegisterActivity(quickstart.Greet)
 
 	done := make(chan struct{})
 
@@ -73,7 +75,7 @@ func (s *UnitTestSuite) Test_CancelActivity() {
 		cancel()
 	}()
 
-	_, err := env.ExecuteActivity(Greet, "Temporal")
+	_, err := env.ExecuteActivity(quickstart.Greet, "Temporal")
 
 	<-done
 

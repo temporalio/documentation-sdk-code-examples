@@ -1,3 +1,4 @@
+// @@@SNIPSTART go-quickstart-execute-workflow
 package main
 
 import (
@@ -34,3 +35,4 @@ func main() {
   }
   log.Println("Workflow result:", result)
 }
+// @@@SNIPEND

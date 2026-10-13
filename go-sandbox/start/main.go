@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	greeting "my-org/greeting"
+	quickstart "my-org/greeting/quickstart"
 
 	"go.temporal.io/sdk/client"
 )
@@ -23,7 +23,7 @@ func main() {
 		TaskQueue: "my-task-queue",
 	}
 
-	we, err := c.ExecuteWorkflow(context.Background(), options, greeting.SayHelloWorkflow, os.Args[1])
+	we, err := c.ExecuteWorkflow(context.Background(), options, quickstart.SayHelloWorkflow, os.Args[1])
 	if err != nil {
 		log.Fatalln("Unable to execute workflow", err)
 	}
@@ -36,3 +36,4 @@ func main() {
 	}
 	log.Println("Workflow result:", result)
 }
+// @@@SNIPEND
