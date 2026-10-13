@@ -1,4 +1,5 @@
-package greeting
+// @@@SNIPSTART go-quickstart-workflow
+package quickstart
 
 import (
 	"time"
@@ -20,3 +21,4 @@ func SayHelloWorkflow(ctx workflow.Context, name string) (string, error) {
 
 	return result, nil
 }
+// @@@SNIPEND

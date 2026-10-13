@@ -1,9 +1,10 @@
+// @@@SNIPSTART go-worker-main
 package main
 
 import (
 	"log"
 
-	"my-org/greeting"
+	quickstart "my-org/greeting/quickstart"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"
@@ -18,11 +19,12 @@ func main() {
 
 	w := worker.New(c, "my-task-queue", worker.Options{})
 
-	w.RegisterWorkflow(greeting.SayHelloWorkflow)
-	w.RegisterActivity(greeting.Greet)
+	w.RegisterWorkflow(quickstart.SayHelloWorkflow)
+	w.RegisterActivity(quickstart.Greet)
 
 	err = w.Run(worker.InterruptCh())
 	if err != nil {
 		log.Fatalln("Unable to start worker", err)
 	}
 }
+// @@@SNIPEND

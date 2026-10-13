@@ -3,6 +3,8 @@ package greeting
 import (
 	"testing"
 
+	quickstart "my-org/greeting/quickstart"
+
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
@@ -22,11 +24,11 @@ func Test_Workflow(t *testing.T) {
 	testSuite := &testsuite.WorkflowTestSuite{}
 
 	env := testSuite.NewTestWorkflowEnvironment()
-	env.RegisterActivity(Greet)
+	env.RegisterActivity(quickstart.Greet)
 
-	env.OnActivity(Greet, mock.Anything, "Temporal").Return("Hello, Temporal", nil)
+	env.OnActivity(quickstart.Greet, mock.Anything, "Temporal").Return("Hello, Temporal", nil)
 
-	env.ExecuteWorkflow(SayHelloWorkflow, "Temporal")
+	env.ExecuteWorkflow(quickstart.SayHelloWorkflow, "Temporal")
 
 	require.True(t, env.IsWorkflowCompleted())
 	require.NoError(t, env.GetWorkflowError())
