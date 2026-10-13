@@ -9,6 +9,11 @@
     <artifactId>temporal-hello-world</artifactId>
     <version>1.0.0</version>
 
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <dependencies>
 <!--
   Temporal dependencies needed to compile, build,
@@ -41,7 +46,7 @@
   -->
   <groupId>io.temporal</groupId>
   <artifactId>temporal-testing</artifactId>
-  <version>1.38.0</version>
+  <version>1.40.0</version>
   <scope>test</scope>
 </dependency>
 
