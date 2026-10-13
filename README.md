@@ -114,7 +114,7 @@ S3AsyncClient s3Client = S3AsyncClient.builder().region(Region.US_EAST_2).build(
   collisions:
 
   ```sh
-  grep -r "@@@SNIPSTART" .
+  rg '@{3}SNIPSTART' .
   ```
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for more detail.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
