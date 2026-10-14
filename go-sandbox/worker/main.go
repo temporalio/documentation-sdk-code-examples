@@ -4,7 +4,7 @@ package main
 import (
 	"log"
 
-	quickstart "my-org/greeting/quickstart"
+	"my-org/quickstart"
 
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/worker"

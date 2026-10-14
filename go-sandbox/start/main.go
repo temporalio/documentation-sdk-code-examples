@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	quickstart "my-org/greeting/quickstart"
+	"my-org/quickstart"
 
 	"go.temporal.io/sdk/client"
 )

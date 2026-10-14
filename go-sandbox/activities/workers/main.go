@@ -9,7 +9,7 @@ import (
 	"go.temporal.io/sdk/worker"
 	"go.temporal.io/sdk/workflow"
 
-	"my-org/greeting/activities/basics"
+	"my-org/quickstart/activities/basics"
 )
 
 func main() {
