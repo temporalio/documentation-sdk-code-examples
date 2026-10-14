@@ -1,4 +1,4 @@
-module my-org/greeting
+module my-org/quickstart
 
 go 1.26.0
 

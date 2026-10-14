@@ -1,11 +1,10 @@
-package greeting
+package quickstart_test
 
 import (
 	"context"
+	"my-org/quickstart"
 	"testing"
 	"time"
-
-	quickstart "my-org/greeting/quickstart"
 
 	"github.com/stretchr/testify/suite"
 	"go.temporal.io/sdk/activity"

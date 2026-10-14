@@ -1,9 +1,9 @@
-package greeting
+package quickstart_test
 
 import (
 	"testing"
 
-	quickstart "my-org/greeting/quickstart"
+	"my-org/quickstart"
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
