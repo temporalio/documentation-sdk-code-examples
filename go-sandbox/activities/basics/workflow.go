@@ -68,6 +68,9 @@ func YourWorkflowDefinition(ctx workflow.Context, param YourWorkflowParam) (*You
 
 // @@@SNIPEND
 
+// @@@SNIPSTART go-workflows-basics-simple
 func YourSimpleWorkflowDefinition(ctx workflow.Context) error {
+	// ...
 	return nil
 }
+// @@@SNIPEND
