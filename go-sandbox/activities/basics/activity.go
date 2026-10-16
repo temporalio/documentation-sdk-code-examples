@@ -41,5 +41,4 @@ func (a *YourActivityObject) YourActivityDefinition(ctx context.Context, param Y
 	// The results persist within the Event History of the Workflow Execution.
 	return result, nil
 }
-
 // @@@SNIPEND
