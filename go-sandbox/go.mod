@@ -20,6 +20,9 @@ require (
 	go.temporal.io/sdk/contrib/aws/lambdaworker v0.1.1 // indirect
 	go.temporal.io/sdk/contrib/aws/lambdaworker/otel v0.1.1 // indirect
 	go.temporal.io/sdk/contrib/envconfig v1.0.0 // indirect
+	go.temporal.io/sdk/contrib/gcp/cloudrun/id v0.1.0 // indirect
+	go.temporal.io/sdk/contrib/gcp/cloudrun/otel v0.1.0 // indirect
+	go.temporal.io/sdk/contrib/opentelemetry/otlpworker v0.1.0 // indirect
 )
 
 require (
