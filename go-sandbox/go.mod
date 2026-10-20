@@ -6,6 +6,8 @@ require go.temporal.io/sdk v1.49.0
 
 require github.com/uber-go/tally/v4 v4.1.1
 
+require go.temporal.io/sdk/contrib/workflowstreams v0.1.1
+
 require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
