@@ -7,6 +7,22 @@ require go.temporal.io/sdk v1.49.0
 require github.com/uber-go/tally/v4 v4.1.1
 
 require (
+	github.com/BurntSushi/toml v1.4.0 // indirect
+	github.com/aws/aws-lambda-go v1.47.0 // indirect
+	github.com/cenkalti/backoff/v5 v5.0.3 // indirect
+	go.opentelemetry.io/contrib/propagators/aws v1.42.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetricgrpc v1.42.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace v1.42.0 // indirect
+	go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc v1.42.0 // indirect
+	go.opentelemetry.io/otel/sdk v1.44.0 // indirect
+	go.opentelemetry.io/otel/sdk/metric v1.44.0 // indirect
+	go.opentelemetry.io/proto/otlp v1.9.0 // indirect
+	go.temporal.io/sdk/contrib/aws/lambdaworker v0.1.1 // indirect
+	go.temporal.io/sdk/contrib/aws/lambdaworker/otel v0.1.1 // indirect
+	go.temporal.io/sdk/contrib/envconfig v1.0.0 // indirect
+)
+
+require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
@@ -16,7 +32,7 @@ require (
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.2 // indirect
-	github.com/grpc-ecosystem/grpc-gateway/v2 v2.22.0 // indirect
+	github.com/grpc-ecosystem/grpc-gateway/v2 v2.28.0 // indirect
 	github.com/nexus-rpc/nexus-proto-annotations v0.1.0 // indirect
 	github.com/nexus-rpc/sdk-go v0.7.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
