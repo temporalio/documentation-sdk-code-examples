@@ -1,3 +1,4 @@
+// @@@SNIPSTART go-testing-sleep-for-days
 package quickstart
 
 import (
@@ -37,3 +38,4 @@ func TestSleepForDaysWorkflow(t *testing.T) {
 	// Execute workflow.
 	env.ExecuteWorkflow(SleepForDaysWorkflow)
 }
+// @@@SNIPEND
