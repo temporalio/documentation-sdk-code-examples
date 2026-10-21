@@ -1,0 +1,28 @@
+package main
+
+import (
+	"log"
+
+	"go.temporal.io/sdk/client"
+	"go.temporal.io/sdk/worker"
+
+	"my-org/quickstart/platform/enrichui"
+)
+
+func main() {
+	c, err := client.Dial(client.Options{})
+	if err != nil {
+		log.Fatalln("Unable to create client", err)
+	}
+	defer c.Close()
+
+	w := worker.New(c, enrichui.TaskQueue, worker.Options{})
+	w.RegisterWorkflow(enrichui.YourWorkflow)
+	w.RegisterWorkflow(enrichui.ActivitySummaryWorkflow)
+	w.RegisterWorkflow(enrichui.TimerSummaryWorkflow)
+	w.RegisterActivity(enrichui.YourActivity)
+
+	if err := w.Run(worker.InterruptCh()); err != nil {
+		log.Fatalln("Unable to start Worker", err)
+	}
+}
