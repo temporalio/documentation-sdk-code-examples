@@ -6,6 +6,7 @@ const acts = proxyActivities<typeof activities>({
   startToCloseTimeout: '10 seconds',
 });
 
+// @@@SNIPSTART typescript-pattern-saga-pattern-workflow
 type Compensation = () => Promise<void>;
 
 export async function openAccount(req: OpenAccountRequest): Promise<string> {
@@ -38,3 +39,4 @@ export async function openAccount(req: OpenAccountRequest): Promise<string> {
     throw err;
   }
 }
+// @@@SNIPEND
