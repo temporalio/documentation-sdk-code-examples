@@ -6,6 +6,8 @@ require go.temporal.io/sdk v1.49.0
 
 require github.com/uber-go/tally/v4 v4.1.1
 
+require go.temporal.io/sdk/contrib/workflowstreams v0.1.1
+
 require (
 	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/DataDog/datadog-agent/comp/core/tagger/origindetection v0.77.0 // indirect
