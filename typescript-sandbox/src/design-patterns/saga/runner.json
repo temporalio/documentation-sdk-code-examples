@@ -1,0 +1,24 @@
+{
+  "pattern": "saga",
+  "language": "typescript",
+  "workdir": "typescript-sandbox",
+  "files": [
+    "src/design-patterns/saga/workflows.ts",
+    "src/design-patterns/saga/activities.ts",
+    "src/design-patterns/saga/shared.ts",
+    "src/design-patterns/saga/worker.ts",
+    "src/design-patterns/saga/starter.ts"
+  ],
+  "setup": "npm ci",
+  "worker": "npx ts-node src/design-patterns/saga/worker.ts",
+  "starter": "npx ts-node src/design-patterns/saga/starter.ts",
+  "expect": {
+    "status": "FAILED",
+    "output": [
+      "Compensation: disconnected bank accounts",
+      "Compensation: removed client",
+      "Compensation: cleared postal addresses",
+      "Workflow failed after compensating: Bank rejected account"
+    ]
+  }
+}

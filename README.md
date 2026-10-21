@@ -95,6 +95,42 @@ the PR description:
 | Rust | `cargo build`, `cargo test` |
 | .NET | `dotnet build` |
 
+## Runnable design patterns
+
+Design-pattern samples live in a `design-patterns/<pattern>/` folder inside
+the language's sandbox, for example
+[`typescript-sandbox/src/design-patterns/saga/`](typescript-sandbox/src/design-patterns/saga/).
+Each one has a `runner.json` manifest that says how to run it end to end and
+what result to expect. The "Run this pattern live" feature on
+docs.temporal.io runs samples from these manifests, so every pattern listed
+there must pass here first.
+
+| Field | What it holds |
+|---|---|
+| `pattern`, `language` | Identifiers the docs site uses to find the sample |
+| `workdir` | Folder the commands run in, relative to the repo root |
+| `files` | Files shown to the reader, relative to `workdir` |
+| `setup` | Installs dependencies |
+| `worker` | Starts the Worker. It keeps running while the starter runs |
+| `starter` | Starts the Workflow and exits when it finishes |
+| `expect.status` | Final Workflow status: `COMPLETED`, `FAILED`, and so on |
+| `expect.output` | Lines that must appear, in order, in the Worker and starter output |
+
+The **Run design patterns** workflow
+([`.github/workflows/run-design-patterns.yml`](.github/workflows/run-design-patterns.yml))
+runs every manifest against a fresh Temporal dev server on pull requests that
+touch a pattern, on pushes to `main`, and nightly. A nightly failure opens or
+updates a tracking issue. To run one manifest locally, install the
+[Temporal CLI](https://github.com/temporalio/cli/#installation) and `jq`, then
+run this from the repo root:
+
+```bash
+.github/scripts/run-design-pattern.sh typescript-sandbox/src/design-patterns/saga/runner.json
+```
+
+Set `SKIP_SETUP=1` to skip the `setup` command when dependencies are already
+installed.
+
 ## Snipsync markers
 
 Snipsync uses the snippet name to match code here with a placeholder in the
