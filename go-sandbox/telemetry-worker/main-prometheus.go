@@ -6,13 +6,14 @@ import (
 )
 
 func mainPrometheus() {
+	// @@@SNIPSTART go-observability-global-tags
 	// Create the base OTel metrics handler
 	metricsHandler := temporalotel.NewMetricsHandler(temporalotel.MetricsHandlerOptions{})
 
 	// Add global/static tags to all emitted metrics
 	globalTagsHandler := metricsHandler.WithTags(map[string]string{
-		"team": "content-platform",
-		"service": "checkout",
+		"team":        "content-platform",
+		"service":     "checkout",
 		"cost_center": "cc-1042",
 		"environment": "production",
 	})
@@ -23,6 +24,7 @@ func mainPrometheus() {
 	}
 
 	temporalClient, err := client.Dial(clientOptions)
+	// @@@SNIPEND
 	if err != nil {
 		panic(err)
 	}
