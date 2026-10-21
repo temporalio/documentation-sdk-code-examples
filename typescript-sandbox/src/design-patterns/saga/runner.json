@@ -13,7 +13,7 @@
   "worker": "npx ts-node src/design-patterns/saga/worker.ts",
   "starter": "npx ts-node src/design-patterns/saga/starter.ts",
   "expect": {
-    "status": "FAILED",
+    "status": "COMPLETED",
     "output": [
       "Compensation: disconnected bank accounts",
       "Compensation: removed client",
