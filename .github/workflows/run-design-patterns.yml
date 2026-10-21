@@ -1,0 +1,74 @@
+name: Run design patterns
+
+# Runs every design-pattern sample end to end from its runner.json manifest
+# against a real Temporal dev server, and checks the Workflow's final status
+# and output. The docs.temporal.io live runner executes the same manifests.
+
+on:
+  pull_request:
+    paths:
+      - "*-sandbox/**/design-patterns/**"
+      - "*-sandbox/package.json"
+      - "*-sandbox/package-lock.json"
+      - ".github/scripts/run-design-pattern.sh"
+      - ".github/workflows/run-design-patterns.yml"
+  push:
+    branches: [main]
+  schedule:
+    # Nightly, to catch Temporal CLI and dev server changes.
+    - cron: "17 9 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  typescript:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: typescript-sandbox/.nvmrc
+          cache: npm
+          cache-dependency-path: typescript-sandbox/package-lock.json
+      - name: Install Temporal CLI
+        run: |
+          curl -sSf https://temporal.download/cli.sh | sh
+          echo "$HOME/.temporalio/bin" >> "$GITHUB_PATH"
+      - name: Run each manifest
+        run: |
+          status=0
+          for manifest in $(find typescript-sandbox -path '*/node_modules' -prune -o -path '*/design-patterns/*/runner.json' -print | sort); do
+            echo "::group::$manifest"
+            .github/scripts/run-design-pattern.sh "$manifest" || status=1
+            echo "::endgroup::"
+          done
+          exit $status
+
+  report:
+    name: Report nightly failure
+    needs: [typescript]
+    if: failure() && github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open or update a tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Nightly design-pattern run failed"
+          existing="$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Failed again: $RUN_URL"
+          else
+            gh issue create --title "$title" --body "A design-pattern sample no longer runs end to end. The docs.temporal.io live runner uses these manifests, so visitors may see the same failure. Run: $RUN_URL"
+          fi
