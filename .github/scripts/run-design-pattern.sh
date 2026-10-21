@@ -35,12 +35,19 @@ with_timeout() {
   if command -v timeout >/dev/null; then timeout "$@"; else shift; "$@"; fi
 }
 
+# Prints the Worker and starter output for debugging, then the failure reason
+# last so it's what readers see. Samples that fail on purpose (like Saga) put
+# expected stack traces in this output.
 fail() {
-  echo "FAIL [$name]: $*"
   for f in worker starter; do
     echo "----- $f output -----"
     cat "$logdir/$f.log" 2>/dev/null || true
   done
+  echo "----- end of output -----"
+  echo "FAIL [$name]: $*"
+  if [ -n "${GITHUB_ACTIONS:-}" ]; then
+    echo "::error title=Design pattern $name failed::$*"
+  fi
   exit 1
 }
 
