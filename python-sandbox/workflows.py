@@ -1,3 +1,4 @@
+# @@@SNIPSTART python-quickstart-workflow
 from datetime import timedelta
 from temporalio import workflow
 
@@ -13,3 +14,4 @@ class SayHelloWorkflow:
             name,
             schedule_to_close_timeout=timedelta(seconds=10),
         )
+# @@@SNIPEND

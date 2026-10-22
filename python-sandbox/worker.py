@@ -1,3 +1,4 @@
+# @@@SNIPSTART python-quickstart-worker
 import asyncio
 from temporalio.client import Client
 from temporalio.worker import Worker
@@ -20,3 +21,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+# @@@SNIPEND

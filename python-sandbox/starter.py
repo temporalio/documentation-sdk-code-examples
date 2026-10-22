@@ -1,3 +1,4 @@
+# @@@SNIPSTART python-quickstart-start-workflow
 import asyncio
 import uuid
 from temporalio.client import Client
@@ -14,3 +15,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+# @@@SNIPEND
