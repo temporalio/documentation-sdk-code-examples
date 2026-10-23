@@ -4,9 +4,9 @@ import asyncio
 from temporalio.client import Client
 from temporalio.worker import Worker
 
-from workflows import SayHelloWorkflow
-from activities import greet
-from handler import SayHelloNexusServiceHandler
+from nexus_quickstart.workflows import SayHelloWorkflow
+from nexus_quickstart.activities import greet
+from nexus_quickstart.handler import SayHelloNexusServiceHandler
 
 
 async def main():

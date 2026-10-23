@@ -4,8 +4,8 @@ import uuid
 import nexusrpc.handler
 from temporalio import nexus
 
-from service import MyInput, SayHelloNexusService
-from workflows import SayHelloWorkflow
+from nexus_quickstart.service import MyInput, SayHelloNexusService
+from nexus_quickstart.workflows import SayHelloWorkflow
 
 
 @nexusrpc.handler.service_handler(service=SayHelloNexusService)
