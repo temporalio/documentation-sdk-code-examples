@@ -1,3 +1,4 @@
+# @@@SNIPSTART python-observability-global-tags
 import asyncio
 from temporalio.client import Client
 from temporalio.worker import Worker
@@ -20,7 +21,7 @@ async def main():
             },
         )
     )
-    
+
     client = await Client.connect("localhost:7233", runtime=new_runtime)
     worker = Worker(
         client,
@@ -33,3 +34,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+# @@@SNIPEND
