@@ -8,9 +8,8 @@ from temporalio.api.workflowservice.v1 import RegisterNamespaceRequest
 from temporalio.client import Client
 from temporalio.testing import WorkflowEnvironment
 
-import caller_starter
-import nexus_worker
-from caller import NEXUS_ENDPOINT
+from nexus_quickstart import caller_starter, worker as nexus_worker
+from nexus_quickstart.caller import NEXUS_ENDPOINT
 
 
 @pytest.mark.asyncio

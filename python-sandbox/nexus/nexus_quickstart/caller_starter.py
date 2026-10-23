@@ -5,7 +5,7 @@ import uuid
 from temporalio.client import Client
 from temporalio.worker import Worker
 
-from caller import CallerWorkflow
+from nexus_quickstart.caller import CallerWorkflow
 
 CALLER_TASK_QUEUE = "my-caller-task-queue"
 NAMESPACE = "my-caller-namespace"

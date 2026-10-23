@@ -1,7 +1,7 @@
 # @@@SNIPSTART python-nexus-quickstart-caller
 from datetime import timedelta
 from temporalio import workflow
-from service import MyInput, SayHelloNexusService
+from nexus_quickstart.service import MyInput, SayHelloNexusService
 
 NEXUS_ENDPOINT = "my-nexus-endpoint-name"
 
