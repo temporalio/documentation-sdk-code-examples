@@ -1,0 +1,10 @@
+# @@@SNIPSTART python-client-cloud-mtls-toml
+# Cloud profile for Temporal Cloud
+[profile.staging]
+address = "your-namespace.a1b2c.tmprl.cloud:7233"
+namespace = "your-namespace"
+
+[profile.staging.tls]
+client_cert_data = "your-tls-client-cert-data"
+client_key_path = "your-tls-client-key-path"
+# @@@SNIPEND
