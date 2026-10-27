@@ -1,8 +1,7 @@
-﻿using MyNamespace;
+// @@@SNIPSTART dotnet-quickstart-worker
+using MyNamespace;
 using Temporalio.Client;
-using Temporalio.Extensions.OpenTelemetry;
 using Temporalio.Worker;
-using Temporalio.Worker.Interceptors;
 
 // Create a client to localhost on "default" namespace
 var client = await TemporalClient.ConnectAsync(new("localhost:7233"));
@@ -19,17 +18,12 @@ Console.CancelKeyPress += (_, eventArgs) =>
 // all static activities, we could just reference those directly.
 var activities = new MyActivities();
 
-var interceptor = new TracingInterceptor();
-
 // Create worker with the activity and workflow registered
 using var worker = new TemporalWorker(
     client,
     new TemporalWorkerOptions("my-task-queue")
-    {
-        Interceptors = [interceptor]
-    }
-    .AddActivity(activities.SayHello)
-    .AddWorkflow<SayHelloWorkflow>()
+        .AddActivity(activities.SayHello)
+        .AddWorkflow<SayHelloWorkflow>()
 );
 
 // Run worker until cancelled
@@ -42,3 +36,4 @@ catch (OperationCanceledException)
 {
     Console.WriteLine("Worker cancelled");
 }
+// @@@SNIPEND
