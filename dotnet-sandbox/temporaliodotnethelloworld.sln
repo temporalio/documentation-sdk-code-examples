@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Worker", "Worker\Worker.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{C321945F-3289-477F-B9F0-E160CDC0AA9F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{218B6F35-38A8-8894-4A45-A70D6B0063B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Workflows", "workflows\Workflows.csproj", "{6DC602C4-8B93-418C-95AA-AE6FA24903A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,8 +59,23 @@ Global
 		{C321945F-3289-477F-B9F0-E160CDC0AA9F}.Release|x64.Build.0 = Release|Any CPU
 		{C321945F-3289-477F-B9F0-E160CDC0AA9F}.Release|x86.ActiveCfg = Release|Any CPU
 		{C321945F-3289-477F-B9F0-E160CDC0AA9F}.Release|x86.Build.0 = Release|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Debug|x64.Build.0 = Debug|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Debug|x86.Build.0 = Debug|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Release|x64.ActiveCfg = Release|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Release|x64.Build.0 = Release|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Release|x86.ActiveCfg = Release|Any CPU
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6DC602C4-8B93-418C-95AA-AE6FA24903A7} = {218B6F35-38A8-8894-4A45-A70D6B0063B3}
 	EndGlobalSection
 EndGlobal
