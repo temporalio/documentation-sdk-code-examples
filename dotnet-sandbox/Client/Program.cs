@@ -1,14 +1,9 @@
-﻿using MyNamespace;
+// @@@SNIPSTART dotnet-quickstart-client
+using MyNamespace;
 using Temporalio.Client;
 
 // Create a client to localhost on "default" namespace
-var interceptor = new SimpleWorkerInterceptor();
-
-var client = await TemporalClient.ConnectAsync(new()
-{
-    TargetHost = "localhost:7233",
-    Interceptors = [],
-});
+var client = await TemporalClient.ConnectAsync(new("localhost:7233"));
 
 // Run workflow
 var result = await client.ExecuteWorkflowAsync(
@@ -17,3 +12,4 @@ var result = await client.ExecuteWorkflowAsync(
 );
 
 Console.WriteLine("Workflow result: {0}", result);
+// @@@SNIPEND
