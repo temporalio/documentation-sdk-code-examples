@@ -1,3 +1,4 @@
+# @@@SNIPSTART python-testing-workflow
 import uuid
 
 import pytest
@@ -27,8 +28,10 @@ async def test_say_hello_workflow():
                 task_queue=task_queue_name,
             )
             assert result == "Hello Temporal"
+# @@@SNIPEND
 
 
+# @@@SNIPSTART python-testing-mock-activity
 @pytest.mark.asyncio
 async def test_say_hello_workflow_with_mocked_activity():
     """Run the workflow with the greet activity mocked out."""
@@ -52,3 +55,4 @@ async def test_say_hello_workflow_with_mocked_activity():
                 task_queue=task_queue_name,
             )
             assert result == "mocked greeting"
+# @@@SNIPEND
