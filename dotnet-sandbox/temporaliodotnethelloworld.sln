@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityTimeouts", "activit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsyncActivityCompletion", "activities\AsyncActivityCompletion\AsyncActivityCompletion.csproj", "{7286FBDF-214C-4297-9C50-294F7B035434}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BenignExceptions", "activities\BenignExceptions\BenignExceptions.csproj", "{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +117,18 @@ Global
 		{7286FBDF-214C-4297-9C50-294F7B035434}.Release|x64.Build.0 = Release|Any CPU
 		{7286FBDF-214C-4297-9C50-294F7B035434}.Release|x86.ActiveCfg = Release|Any CPU
 		{7286FBDF-214C-4297-9C50-294F7B035434}.Release|x86.Build.0 = Release|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Debug|x64.Build.0 = Debug|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Debug|x86.Build.0 = Debug|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Release|x64.ActiveCfg = Release|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Release|x64.Build.0 = Release|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Release|x86.ActiveCfg = Release|Any CPU
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,5 +138,6 @@ Global
 		{A74C5EA7-1BFB-4CDB-B467-7F2FAEFA2930} = {563C0AC8-75AF-BFF6-E848-755221C6AAEE}
 		{ABE1C5A2-0979-4A03-9ABD-8C1F90317790} = {563C0AC8-75AF-BFF6-E848-755221C6AAEE}
 		{7286FBDF-214C-4297-9C50-294F7B035434} = {563C0AC8-75AF-BFF6-E848-755221C6AAEE}
+		{4B653387-9C2D-4AAA-9CBA-749D6853BDC9} = {563C0AC8-75AF-BFF6-E848-755221C6AAEE}
 	EndGlobalSection
 EndGlobal
