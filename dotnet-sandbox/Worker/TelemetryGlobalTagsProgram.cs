@@ -1,4 +1,5 @@
-﻿using Temporalio.Client;
+﻿// @@@SNIPSTART dotnet-observability-global-tags
+using Temporalio.Client;
 using Temporalio.Runtime;
 
 public static class TelemetryGlobalTagsProgram
@@ -26,3 +27,4 @@ public static class TelemetryGlobalTagsProgram
             new("localhost:7233") { Runtime = runtime });
     }
 }
+// @@@SNIPEND
