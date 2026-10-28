@@ -1,4 +1,4 @@
-
+// @@@SNIPSTART dotnet-interceptors-client-context-propagation
 using Google.Protobuf;
 using Temporalio.Api.Common.V1;
 using Temporalio.Client;
@@ -39,3 +39,4 @@ public class ContextPropagationClientOutboundInterceptor(
         return base.StartWorkflowAsync<TWorkflow, TResult>(input with { Headers = headers });
     }
 }
+// @@@SNIPEND

@@ -1,4 +1,6 @@
+// @@@SNIPSTART dotnet-interceptors-worker-activity-metrics
 using Temporalio.Activities;
+using Temporalio.Worker;
 using Temporalio.Worker.Interceptors;
 
 public class SimpleWorkerInterceptor : IWorkerInterceptor
@@ -45,3 +47,4 @@ public class ActivityMetricsInterceptor(ActivityInboundInterceptor next)
         return result;
     }
 }
+// @@@SNIPEND
