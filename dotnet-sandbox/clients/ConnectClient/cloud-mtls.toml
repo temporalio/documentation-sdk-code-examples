@@ -1,0 +1,8 @@
+# @@@SNIPSTART dotnet-client-cloud-mtls-toml
+# Cloud profile for Temporal Cloud
+[profile.cloud]
+address = "your-namespace.a1b2c.tmprl.cloud:7233"
+namespace = "your-namespace"
+tls_client_cert_data = "your-tls-client-cert-data"
+tls_client_key_path = "your-tls-client-key-path"
+# @@@SNIPEND
