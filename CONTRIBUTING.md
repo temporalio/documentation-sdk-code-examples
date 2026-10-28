@@ -82,7 +82,7 @@ check.
 
 | Job | What it runs |
 |---|---|
-| .NET | `dotnet build temporaliodotnethelloworld.sln --configuration Release` (.NET 9) |
+| .NET | `dotnet build temporaliodotnethelloworld.sln --configuration Release` (.NET 10 SDK; `activities/StandaloneActivities` targets .NET 10, the other projects .NET 9) |
 | Go | `go build ./...`, `go vet ./...` (version from `go.mod`) |
 | Java | `mvn -B -f <module>/pom.xml test-compile -Dmaven.compiler.release=21` for each `*/pom.xml` (JDK 21) |
 | Python | `python -m compileall -q -x '/\.venv/' .` (Python 3.13) |
