@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnrichingUi", "platform\Enr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErrorHandling", "bestpractices\ErrorHandling\ErrorHandling.csproj", "{E8E83949-CE92-413B-8DCF-6E73D0D841E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingSuite", "bestpractices\TestingSuite\TestingSuite.csproj", "{EBE802DF-1D8B-49FF-B5FD-868128710B0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -285,6 +287,18 @@ Global
 		{E8E83949-CE92-413B-8DCF-6E73D0D841E1}.Release|x64.Build.0 = Release|Any CPU
 		{E8E83949-CE92-413B-8DCF-6E73D0D841E1}.Release|x86.ActiveCfg = Release|Any CPU
 		{E8E83949-CE92-413B-8DCF-6E73D0D841E1}.Release|x86.Build.0 = Release|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Debug|x64.Build.0 = Debug|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Debug|x86.Build.0 = Debug|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Release|x64.ActiveCfg = Release|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Release|x64.Build.0 = Release|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Release|x86.ActiveCfg = Release|Any CPU
+		{EBE802DF-1D8B-49FF-B5FD-868128710B0A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
