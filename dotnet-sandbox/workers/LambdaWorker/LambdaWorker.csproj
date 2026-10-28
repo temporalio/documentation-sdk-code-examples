@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Temporalio" Version="1.21.0" />
+    <PackageReference Include="Temporalio.Extensions.Aws.Lambda" Version="1.21.0" />
+    <PackageReference Include="Temporalio.Extensions.Aws.Lambda.OpenTelemetry" Version="1.21.0" />
+  </ItemGroup>
+
+</Project>
