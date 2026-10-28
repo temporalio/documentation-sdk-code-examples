@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingSuite", "bestpractic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataConversion", "bestpractices\DataConversion\DataConversion.csproj", "{A8A873E0-8D55-47DA-9086-5113427BFE98}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataEncryption", "bestpractices\DataEncryption\DataEncryption.csproj", "{9F1A74FF-8253-4492-AC44-717B0CD113EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -313,6 +315,18 @@ Global
 		{A8A873E0-8D55-47DA-9086-5113427BFE98}.Release|x64.Build.0 = Release|Any CPU
 		{A8A873E0-8D55-47DA-9086-5113427BFE98}.Release|x86.ActiveCfg = Release|Any CPU
 		{A8A873E0-8D55-47DA-9086-5113427BFE98}.Release|x86.Build.0 = Release|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Debug|x64.Build.0 = Debug|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Debug|x86.Build.0 = Debug|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Release|x64.ActiveCfg = Release|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Release|x64.Build.0 = Release|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Release|x86.ActiveCfg = Release|Any CPU
+		{9F1A74FF-8253-4492-AC44-717B0CD113EE}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
