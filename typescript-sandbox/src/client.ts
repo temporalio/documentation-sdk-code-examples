@@ -1,3 +1,4 @@
+// @@@SNIPSTART typescript-quickstart-client
 import { Connection, Client } from '@temporalio/client';
 import { loadClientConnectConfig } from '@temporalio/envconfig';
 import { example } from './workflows';
@@ -25,3 +26,4 @@ run().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+// @@@SNIPEND
