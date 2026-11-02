@@ -1,3 +1,4 @@
+// @@@SNIPSTART typescript-observability-winston-logger
 import { 
   DefaultLogger,
   Runtime
@@ -19,3 +20,4 @@ const logger = new DefaultLogger('DEBUG', (entry) => {
 });
 
 Runtime.install({ logger });
+// @@@SNIPEND

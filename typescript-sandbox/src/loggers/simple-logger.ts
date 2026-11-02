@@ -1,3 +1,4 @@
+// @@@SNIPSTART typescript-observability-runtime-logger
 import {
   DefaultLogger,
   makeTelemetryFilterString,
@@ -22,3 +23,4 @@ Runtime.install({
     },
   },
 });
+// @@@SNIPEND
