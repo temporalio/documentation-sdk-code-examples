@@ -491,3 +491,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Workflow bundle built by typescript-sandbox/src/workers/run-worker/scripts/build-workflow-bundle.ts
+typescript-sandbox/src/workers/run-worker/workflow-bundle.js
