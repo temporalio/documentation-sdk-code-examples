@@ -1,0 +1,14 @@
+// @@@SNIPSTART typescript-best-practices-external-storage-s3-driver-create
+import { S3Client } from '@aws-sdk/client-s3';
+import { S3StorageDriver } from '@temporalio/external-storage-s3';
+import { AwsSdkS3StorageDriverClient } from '@temporalio/external-storage-s3-aws-sdk';
+
+const s3Client = new S3Client({ region: 'us-east-2' });
+
+const driver = new S3StorageDriver({
+  client: new AwsSdkS3StorageDriverClient(s3Client),
+  bucket: 'my-temporal-payloads',
+});
+// @@@SNIPEND
+
+export { driver, s3Client };
