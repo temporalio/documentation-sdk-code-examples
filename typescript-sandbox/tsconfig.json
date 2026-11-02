@@ -4,6 +4,7 @@
   "compilerOptions": {
     "lib": [
       "es2021",
+      "es2022.error",
       "esnext.disposable"
     ],
     "declaration": true,
