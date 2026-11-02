@@ -19,6 +19,8 @@
     "nexus.start.service": "ts-node src/nexus/feature-guide/service/worker.ts",
     "nexus.start.caller": "ts-node src/nexus/feature-guide/caller/worker.ts",
     "nexus.workflow": "ts-node src/nexus/feature-guide/starter.ts",
+    "nexus-standalone.worker": "ts-node src/nexus/standalone-operations/worker/worker.ts",
+    "nexus-standalone.starter": "ts-node src/nexus/standalone-operations/starter.ts",
     "test": "mocha --exit --require ts-node/register --require source-map-support/register src/mocha/*.test.ts"
   },
   "nodemonConfig": {
