@@ -1,3 +1,4 @@
+// @@@SNIPSTART typescript-observability-global-tags
 import {
   Runtime,
 } from '@temporalio/worker';
@@ -15,3 +16,4 @@ Runtime.install({
     },
   },
 });
+// @@@SNIPEND
