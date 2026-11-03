@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: io.temporal.docs.activities.asynchronousactivity.HelloAsyncActivityCompletionTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.892 s -- in io.temporal.docs.activities.asynchronousactivity.HelloAsyncActivityCompletionTest

@@ -1,0 +1,5 @@
+io/temporal/docs/activities/asynchronousactivity/HelloAsyncActivityCompletion$GreetingActivitiesImpl.class
+io/temporal/docs/activities/asynchronousactivity/HelloAsyncActivityCompletion.class
+io/temporal/docs/activities/asynchronousactivity/HelloAsyncActivityCompletion$GreetingWorkflow.class
+io/temporal/docs/activities/asynchronousactivity/HelloAsyncActivityCompletion$GreetingActivities.class
+io/temporal/docs/activities/asynchronousactivity/HelloAsyncActivityCompletion$GreetingWorkflowImpl.class
