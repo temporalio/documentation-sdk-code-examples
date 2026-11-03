@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencies {
+    implementation 'io.temporal:temporal-sdk:1.40.0'
+    // Environment configuration: ClientConfigProfile.load() reads environment variables and the TOML file.
+    implementation 'io.temporal:temporal-envconfig:1.40.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Generic runner:  gradle -q execute -PmainClass=io.temporal.docs.activities.standaloneactivities.StandaloneActivityWorker
+tasks.register('execute', JavaExec) {
+    group = 'application'
+    classpath = sourceSets.main.runtimeClasspath
+    if (project.hasProperty('mainClass')) {
+        mainClass.set(project.property('mainClass').toString())
+    }
+    standardInput = System.in
+}
