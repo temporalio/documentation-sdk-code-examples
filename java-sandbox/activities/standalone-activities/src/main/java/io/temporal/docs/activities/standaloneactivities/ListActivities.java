@@ -23,13 +23,17 @@ public class ListActivities {
             service,
             ActivityClientOptions.newBuilder().setNamespace(profile.getNamespace()).build());
 
-    try (Stream<ActivityExecutionMetadata> activities =
-        client.listExecutions("TaskQueue = '" + TASK_QUEUE + "'")) {
-      activities.forEach(
-          info ->
-              System.out.printf(
-                  "ActivityID: %s, Type: %s, Status: %s%n",
-                  info.getActivityId(), info.getActivityType(), info.getStatus()));
+    try {
+      // @@@SNIPSTART java-standalone-activities-list
+      try (Stream<ActivityExecutionMetadata> activities =
+          client.listExecutions("TaskQueue = '" + TASK_QUEUE + "'")) {
+        activities.forEach(
+            info ->
+                System.out.printf(
+                    "ActivityID: %s, Type: %s, Status: %s%n",
+                    info.getActivityId(), info.getActivityType(), info.getStatus()));
+      }
+      // @@@SNIPEND
     } finally {
       service.shutdown();
     }

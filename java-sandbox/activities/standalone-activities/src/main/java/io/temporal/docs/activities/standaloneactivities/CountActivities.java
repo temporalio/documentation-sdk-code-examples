@@ -23,13 +23,14 @@ public class CountActivities {
             ActivityClientOptions.newBuilder().setNamespace(profile.getNamespace()).build());
 
     try {
+      // @@@SNIPSTART java-standalone-activities-count
       ActivityExecutionCount resp = client.countExecutions("TaskQueue = '" + TASK_QUEUE + "'");
-
       System.out.println("Total activities: " + resp.getCount());
       resp.getGroups()
           .forEach(
               group ->
                   System.out.println("Group " + group.getGroupValues() + ": " + group.getCount()));
+      // @@@SNIPEND
     } finally {
       service.shutdown();
     }
