@@ -14,16 +14,18 @@ public class MultipleStubsWorkflowImpl implements FileProcessingWorkflow {
 
     // @@@SNIPSTART java-activity-execution-multiple-stubs
     public MultipleStubsWorkflowImpl() {
-        ActivityOptions options1 = ActivityOptions.newBuilder()
-                 .setTaskQueue("taskQueue1")
-                 .setStartToCloseTimeout(Duration.ofMinutes(10))
-                 .build();
+        ActivityOptions options1 =
+            ActivityOptions.newBuilder()
+                .setTaskQueue("taskQueue1")
+                .setStartToCloseTimeout(Duration.ofMinutes(10))
+                .build();
         this.store1 = Workflow.newActivityStub(FileProcessingActivities.class, options1);
 
-        ActivityOptions options2 = ActivityOptions.newBuilder()
-                 .setTaskQueue("taskQueue2")
-                 .setStartToCloseTimeout(Duration.ofMinutes(5))
-                 .build();
+        ActivityOptions options2 =
+            ActivityOptions.newBuilder()
+                .setTaskQueue("taskQueue2")
+                .setStartToCloseTimeout(Duration.ofMinutes(5))
+                .build();
         this.store2 = Workflow.newActivityStub(FileProcessingActivities.class, options2);
     }
     // @@@SNIPEND

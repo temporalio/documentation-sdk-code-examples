@@ -13,11 +13,12 @@ public class SyncFileProcessingWorkflowImpl implements FileProcessingWorkflow {
     private final FileProcessingActivities activities;
 
     public SyncFileProcessingWorkflowImpl() {
-        this.activities = Workflow.newActivityStub(
+        this.activities =
+            Workflow.newActivityStub(
                 FileProcessingActivities.class,
                 ActivityOptions.newBuilder()
-                        .setStartToCloseTimeout(Duration.ofHours(1))
-                        .build());
+                    .setStartToCloseTimeout(Duration.ofHours(1))
+                    .build());
     }
 
     @Override
