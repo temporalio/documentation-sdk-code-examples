@@ -53,12 +53,15 @@ jobs:
           distribution: temurin
           java-version: "21"
           cache: maven
-          cache-dependency-path: java-sandbox/*/pom.xml
+          cache-dependency-path: |
+            java-sandbox/*/pom.xml
+            java-sandbox/*/*/pom.xml
       # Each subfolder is its own Maven module with no parent POM, so compile
       # them one at a time. Force a single compiler release across modules.
       - run: |
+          shopt -s nullglob
           status=0
-          for pom in */pom.xml; do
+          for pom in */pom.xml */*/pom.xml; do
             echo "::group::${pom%/pom.xml}"
             mvn -B -f "$pom" test-compile -Dmaven.compiler.release=21 || status=1
             echo "::endgroup::"
