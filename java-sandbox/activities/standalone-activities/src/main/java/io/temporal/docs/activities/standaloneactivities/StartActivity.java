@@ -37,6 +37,7 @@ public class StartActivity {
             .build();
 
     try {
+      // @@@SNIPSTART java-standalone-activities-start
       ActivityHandle<String> handle =
           client.start(
               GreetingActivities.class,
@@ -46,8 +47,10 @@ public class StartActivity {
               "World");
       System.out.println("Started activity ID: " + ACTIVITY_ID);
 
+      // Wait for the result later
       String result = handle.getResult();
       System.out.println("Activity result: " + result);
+      // @@@SNIPEND
     } finally {
       service.shutdown();
     }
