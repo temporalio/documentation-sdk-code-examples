@@ -1,0 +1,10 @@
+# @@@SNIPSTART java-temporal-client-cloud-mtls-profile
+# Cloud profile for Temporal Cloud
+[profile.cloud]
+address = "your-namespace.a1b2c.tmprl.cloud:7233"
+namespace = "your-namespace"
+
+[profile.cloud.tls]
+client_cert_path = "/etc/temporal/certs/client.pem"
+client_key_path = "/etc/temporal/certs/client.key"
+# @@@SNIPEND
