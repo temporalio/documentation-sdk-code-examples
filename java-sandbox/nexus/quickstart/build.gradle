@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencies {
+    implementation 'io.temporal:temporal-sdk:1.40.0'
+
+    testImplementation 'io.temporal:temporal-testing:1.40.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Generic runner:  gradle -q execute -PmainClass=helloworkflow.SayHelloWorker
+tasks.register('execute', JavaExec) {
+    group = 'application'
+    classpath = sourceSets.main.runtimeClasspath
+    if (project.hasProperty('mainClass')) {
+        mainClass.set(project.property('mainClass').toString())
+    }
+    standardInput = System.in
+}
+
+// Same tasks as the Java quickstart's build.gradle, plus one for the Nexus caller
+tasks.register('runWorker', JavaExec) {
+    group = 'application'
+    description = 'Run the Temporal worker'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'helloworkflow.SayHelloWorker'
+}
+
+tasks.register('runCallerStarter', JavaExec) {
+    group = 'application'
+    description = 'Run the Nexus caller Worker and Workflow'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'helloworkflow.NexusCallerStarter'
+}
