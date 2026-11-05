@@ -1,0 +1,22 @@
+package io.temporal.docs.bestpractices.dataencryption;
+
+import io.temporal.activity.ActivityOptions;
+import io.temporal.common.RetryOptions;
+import io.temporal.workflow.Workflow;
+import java.time.Duration;
+
+public class GreetingWorkflowImpl implements GreetingWorkflow {
+
+    private final GreetingActivities activities =
+        Workflow.newActivityStub(
+            GreetingActivities.class,
+            ActivityOptions.newBuilder()
+                .setStartToCloseTimeout(Duration.ofSeconds(5))
+                .setRetryOptions(RetryOptions.newBuilder().setMaximumAttempts(1).build())
+                .build());
+
+    @Override
+    public String getGreeting(String name) {
+        return activities.composeGreeting("Hello", name);
+    }
+}
