@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: io.temporal.docs.bestpractices.dataencryption.DataEncryptionTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.732 s -- in io.temporal.docs.bestpractices.dataencryption.DataEncryptionTest
