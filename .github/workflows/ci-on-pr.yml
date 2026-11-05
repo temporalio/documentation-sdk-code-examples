@@ -115,6 +115,8 @@ jobs:
         with:
           workspaces: rust-sandbox
       - run: cargo check --all-targets --locked
+      - name: Compile Rust External Storage samples
+        run: cargo check --manifest-path external-storage/Cargo.toml --all-targets --locked --features s3
 
   typescript:
     name: TypeScript
