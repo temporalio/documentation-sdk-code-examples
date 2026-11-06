@@ -113,8 +113,12 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: rust-sandbox
+          workspaces: |
+            rust-sandbox
+            rust-sandbox/quickstart
       - run: cargo check --all-targets --locked
+      - run: cargo check --all-targets --locked
+        working-directory: rust-sandbox/quickstart
 
   typescript:
     name: TypeScript
