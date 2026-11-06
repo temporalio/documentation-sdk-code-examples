@@ -113,12 +113,18 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: |
-            rust-sandbox
-            rust-sandbox/quickstart
-      - run: cargo check --all-targets --locked
-      - run: cargo check --all-targets --locked
-        working-directory: rust-sandbox/quickstart
+          workspaces: rust-sandbox
+      # Each sample is its own crate (the root crate, quickstart/, workflows/<page>/).
+      # They share one target directory so dependencies compile once.
+      - run: |
+          for manifest in Cargo.toml */Cargo.toml */*/Cargo.toml; do
+            [ -f "$manifest" ] || continue
+            echo "::group::$manifest"
+            cargo check --all-targets --locked --manifest-path "$manifest"
+            echo "::endgroup::"
+          done
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/rust-sandbox/target
 
   typescript:
     name: TypeScript
