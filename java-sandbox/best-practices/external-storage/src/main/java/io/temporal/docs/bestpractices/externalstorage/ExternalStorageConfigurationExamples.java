@@ -1,4 +1,4 @@
-package io.temporal.docs.externalstorage;
+package io.temporal.docs.bestpractices.externalstorage;
 
 import io.temporal.payload.storage.ExternalStorage;
 import io.temporal.payload.storage.StorageDriver;

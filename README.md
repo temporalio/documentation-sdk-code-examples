@@ -27,8 +27,8 @@ straight off the docs page. To add one:
 2. **Branch.** Name it `docs/<short-sample-name>`.
 3. **Follow the folder's existing layout.** Put the sample in the matching
    `*-sandbox/` folder and copy the structure that's already there. For
-   example, a new Java sample is its own Maven module next to
-   `java-sandbox/external-storage/`, and a new Python sample is flat files
+   example, a new Java sample is its own Maven module at
+   `java-sandbox/<section>/<page>/`, like `java-sandbox/best-practices/external-storage/`, and a new Python sample is flat files
    in `python-sandbox/`.
 4. **Add Snipsync markers.** Wrap each block the doc page will embed (see
    [below](#snipsync-markers)).
