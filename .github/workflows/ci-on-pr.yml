@@ -114,7 +114,7 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: rust-sandbox
-      # Each sample is its own crate (the root crate, quickstart/, workflows/<page>/).
+      # Each sample is its own crate (the root crate, quickstart/, workflows/<page>/, activities/<page>/).
       # They share one target directory so dependencies compile once.
       - run: |
           for manifest in Cargo.toml */Cargo.toml */*/Cargo.toml; do
