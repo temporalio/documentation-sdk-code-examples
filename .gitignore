@@ -4,6 +4,7 @@
 */temporal-hello-world/target/*
 */target/*
 */*/target/*
+*/*/*/target/*
 */node_modules
 
 ## Ignore Visual Studio temporary files, build results, and
