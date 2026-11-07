@@ -14,7 +14,7 @@ async fn main() -> anyhow::Result<()> {
     let driver: Arc<dyn StorageDriver> = if let Ok(bucket) = std::env::var("S3_BUCKET") {
         #[cfg(feature = "s3")]
         {
-            Arc::new(temporal_external_storage_example::s3_driver::create_driver(bucket).await)
+            Arc::new(temporal_external_storage_example::s3_setup::create_driver(bucket).await)
         }
         #[cfg(not(feature = "s3"))]
         {

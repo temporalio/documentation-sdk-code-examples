@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-s3 = ["dep:aws-config", "dep:aws-sdk-s3"]
+s3 = ["dep:aws-config", "dep:aws-sdk-s3", "dep:temporalio-aws-s3driver"]
 
 [dependencies]
 anyhow = "1"
@@ -14,11 +14,12 @@ sha2 = "0.10"
 tokio = { version = "1", features = ["full"] }
 aws-config = { version = "=1.8.11", features = ["credentials-login"], optional = true }
 aws-sdk-s3 = { version = "=1.115.0", optional = true }
-temporalio-client = { git = "https://github.com/temporalio/sdk-rust", rev = "51009f8c1163f333816ef1b2ffa7b66ba82408ba", features = ["experimental"] }
-temporalio-common = { git = "https://github.com/temporalio/sdk-rust", rev = "51009f8c1163f333816ef1b2ffa7b66ba82408ba", features = ["experimental"] }
-temporalio-sdk = { git = "https://github.com/temporalio/sdk-rust", rev = "51009f8c1163f333816ef1b2ffa7b66ba82408ba", features = ["experimental"] }
-temporalio-macros = { git = "https://github.com/temporalio/sdk-rust", rev = "51009f8c1163f333816ef1b2ffa7b66ba82408ba" }
-temporalio-workflow = { git = "https://github.com/temporalio/sdk-rust", rev = "51009f8c1163f333816ef1b2ffa7b66ba82408ba" }
+temporalio-aws-s3driver = { git = "https://github.com/temporalio/sdk-rust", rev = "51009718748275da9ece33041d4ace08049cc41e", optional = true }
+temporalio-client = { git = "https://github.com/temporalio/sdk-rust", rev = "51009718748275da9ece33041d4ace08049cc41e", features = ["experimental"] }
+temporalio-common = { git = "https://github.com/temporalio/sdk-rust", rev = "51009718748275da9ece33041d4ace08049cc41e", features = ["experimental"] }
+temporalio-sdk = { git = "https://github.com/temporalio/sdk-rust", rev = "51009718748275da9ece33041d4ace08049cc41e", features = ["experimental"] }
+temporalio-macros = { git = "https://github.com/temporalio/sdk-rust", rev = "51009718748275da9ece33041d4ace08049cc41e" }
+temporalio-workflow = { git = "https://github.com/temporalio/sdk-rust", rev = "51009718748275da9ece33041d4ace08049cc41e" }
 
 [dev-dependencies]
 tempfile = "3"
