@@ -125,6 +125,10 @@ jobs:
           done
         env:
           CARGO_TARGET_DIR: ${{ github.workspace }}/rust-sandbox/target
+      - name: Compile Rust External Storage samples
+        run: cargo check --manifest-path external-storage/Cargo.toml --all-targets --locked --features s3
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/rust-sandbox/target
 
   typescript:
     name: TypeScript
