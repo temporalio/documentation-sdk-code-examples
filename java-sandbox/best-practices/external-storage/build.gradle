@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencies {
+    implementation 'io.temporal:temporal-sdk:1.40.0'
+    // @@@SNIPSTART java-external-storage-gradle-dependency
+    implementation 'io.temporal:temporal-payload-storage-s3driver-awssdkv2:1.40.0'
+    // @@@SNIPEND
+
+    testImplementation 'io.temporal:temporal-testing:1.40.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test {
+    useJUnitPlatform()
+}

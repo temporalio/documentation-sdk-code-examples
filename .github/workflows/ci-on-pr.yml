@@ -114,9 +114,21 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: rust-sandbox
-      - run: cargo check --all-targets --locked
+      # Each sample is its own crate (the root crate, quickstart/, workflows/<page>/, activities/<page>/).
+      # They share one target directory so dependencies compile once.
+      - run: |
+          for manifest in Cargo.toml */Cargo.toml */*/Cargo.toml; do
+            [ -f "$manifest" ] || continue
+            echo "::group::$manifest"
+            cargo check --all-targets --locked --manifest-path "$manifest"
+            echo "::endgroup::"
+          done
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/rust-sandbox/target
       - name: Compile Rust External Storage samples
         run: cargo check --manifest-path external-storage/Cargo.toml --all-targets --locked --features s3
+        env:
+          CARGO_TARGET_DIR: ${{ github.workspace }}/rust-sandbox/target
 
   typescript:
     name: TypeScript

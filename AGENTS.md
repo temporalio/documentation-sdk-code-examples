@@ -20,8 +20,8 @@ be reported in the PR description.
 ## Rules
 
 - Match the existing layout and style of the target `*-sandbox/` folder before
-  inventing a new structure (e.g. new Java samples are their own Maven module,
-  like `java-sandbox/external-storage`).
+  inventing a new structure (e.g. new Java samples are their own Maven module at
+  `java-sandbox/<section>/<page>/`, like `java-sandbox/best-practices/external-storage`).
 - Never invent a docs.temporal.io URL or slug. Only reference a guide URL the
   user has given you, or leave the link as a placeholder for the docs writer to
   fill in.

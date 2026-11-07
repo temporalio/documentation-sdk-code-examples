@@ -1,0 +1,6 @@
+io/temporal/docs/bestpractices/externalstorage/InMemoryS3Client.class
+io/temporal/docs/bestpractices/externalstorage/EchoWorkflow$EchoActivitiesImpl.class
+io/temporal/docs/bestpractices/externalstorage/EchoWorkflow$EchoActivities.class
+io/temporal/docs/bestpractices/externalstorage/ExternalStorageTest.class
+io/temporal/docs/bestpractices/externalstorage/EchoWorkflow.class
+io/temporal/docs/bestpractices/externalstorage/EchoWorkflow$Impl.class

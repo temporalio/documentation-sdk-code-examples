@@ -26,8 +26,8 @@ local validation is still required and must be reported in the PR description.
    placeholders already exist.
 2. Create a branch named `docs/<short-sample-name>`.
 3. Add the sample under the matching `*-sandbox/` language folder, following that
-   language's existing project layout (e.g. a new Maven module next to
-   `java-sandbox/external-storage`, or flat files like `python-sandbox`).
+   language's existing project layout (e.g. a new Maven module at `java-sandbox/<section>/<page>/`, like
+   `java-sandbox/best-practices/external-storage`, or flat files like `python-sandbox`).
 4. Wrap each code block the doc page will embed in Snipsync markers (see below),
    using descriptive, globally-unique names.
 5. Run the language's normal build/test/lint commands locally (see table below) —
@@ -56,7 +56,7 @@ S3AsyncClient s3Client = S3AsyncClient.builder().region(Region.US_EAST_2).build(
 
 Use `#` instead of `//` for Python and Ruby. Naming convention: `<language>-<topic>-<detail>`,
 e.g. `java-s3-driver-create` (see
-[java-sandbox/external-storage/src/main/java/io/temporal/docs/externalstorage/S3StorageDriverExamples.java](java-sandbox/external-storage/src/main/java/io/temporal/docs/externalstorage/S3StorageDriverExamples.java)).
+[java-sandbox/best-practices/external-storage/src/main/java/io/temporal/docs/bestpractices/externalstorage/S3StorageDriverExamples.java](java-sandbox/best-practices/external-storage/src/main/java/io/temporal/docs/bestpractices/externalstorage/S3StorageDriverExamples.java)).
 
 ## Testing/validation per language
 

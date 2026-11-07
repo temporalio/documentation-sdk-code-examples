@@ -3,6 +3,8 @@
 */.pytest_cache
 */temporal-hello-world/target/*
 */target/*
+*/*/target/*
+*/*/*/target/*
 */node_modules
 
 ## Ignore Visual Studio temporary files, build results, and
@@ -40,6 +42,8 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+# Rust binaries live in src/bin/ and are source code, not build output.
+!rust-sandbox/**/src/bin/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
