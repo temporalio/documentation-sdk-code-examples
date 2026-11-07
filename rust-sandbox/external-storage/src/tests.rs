@@ -95,12 +95,14 @@ async fn rejects_corrupt_missing_and_invalid_claims() {
 #[tokio::test]
 #[ignore = "requires AWS credentials and a disposable RUST_EXTERNAL_STORAGE_TEST_BUCKET"]
 async fn s3_live_round_trip_and_failure_paths() {
-    use crate::s3_driver::create_driver;
+    use crate::s3_setup::create_driver;
     use aws_sdk_s3::primitives::ByteStream;
 
     let bucket = std::env::var("RUST_EXTERNAL_STORAGE_TEST_BUCKET")
         .expect("set RUST_EXTERNAL_STORAGE_TEST_BUCKET to a disposable bucket");
-    let driver = create_driver(bucket).await;
+    let config = aws_config::load_defaults(aws_config::BehaviorVersion::latest()).await;
+    let client = aws_sdk_s3::Client::new(&config);
+    let driver = create_driver(bucket.clone()).await;
     let nonce = std::time::SystemTime::now()
         .duration_since(std::time::UNIX_EPOCH)
         .unwrap()
@@ -131,7 +133,7 @@ async fn s3_live_round_trip_and_failure_paths() {
         .unwrap();
     assert_eq!(claims, repeated);
     // A fresh instance must retrieve claims without any in-memory state from store().
-    let reader = create_driver(driver.bucket.clone()).await;
+    let reader = create_driver(bucket.clone()).await;
     assert_eq!(
         reader
             .retrieve(&retrieve_context(), claims.clone())
@@ -141,10 +143,9 @@ async fn s3_live_round_trip_and_failure_paths() {
     );
 
     let key = &claims[0].claim_data["key"];
-    driver
-        .client
+    client
         .put_object()
-        .bucket(&driver.bucket)
+        .bucket(&bucket)
         .key(key)
         .body(ByteStream::from_static(b"corrupt"))
         .send()
@@ -156,14 +157,18 @@ async fn s3_live_round_trip_and_failure_paths() {
         .unwrap_err()
         .into_source();
     assert!(
-        corrupt.to_string().contains("checksum mismatch"),
+        corrupt
+            .downcast_ref::<temporalio_aws_s3driver::S3StorageDriverError>()
+            .is_some_and(|error| matches!(
+                error,
+                temporalio_aws_s3driver::S3StorageDriverError::IntegrityCheck { .. }
+            )),
         "{corrupt:#}"
     );
 
-    driver
-        .client
+    client
         .delete_object()
-        .bucket(&driver.bucket)
+        .bucket(&bucket)
         .key(key)
         .send()
         .await
@@ -177,8 +182,10 @@ async fn s3_live_round_trip_and_failure_paths() {
     for claim in [
         StorageDriverClaim::new(HashMap::new()),
         StorageDriverClaim::new(HashMap::from([
-            ("key".into(), "../outside".into()),
-            ("sha256".into(), "0".repeat(64)),
+            ("bucket".into(), bucket.clone()),
+            ("key".into(), "v0/test-invalid-claim".into()),
+            ("hash_algorithm".into(), "unsupported".into()),
+            ("hash_value".into(), "0".repeat(64)),
         ])),
     ] {
         assert!(
@@ -190,10 +197,9 @@ async fn s3_live_round_trip_and_failure_paths() {
     }
     // Remove only the objects this test stored.
     for claim in claims {
-        driver
-            .client
+        client
             .delete_object()
-            .bucket(&driver.bucket)
+            .bucket(&bucket)
             .key(&claim.claim_data["key"])
             .send()
             .await

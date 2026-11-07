@@ -2,7 +2,11 @@
 
 This independent crate uses an unreleased Rust SDK revision with the `experimental`
 feature. It is isolated from the parent crate to keep existing samples on their
-published SDK dependencies. All Temporal crates are pinned to the same revision.
+published SDK dependencies. All Temporal crates, including the SDK-provided `temporalio-aws-s3driver`, are pinned
+to revision `51009718748275da9ece33041d4ace08049cc41e` from
+https://github.com/temporalio/sdk-rust/pull/1721. That PR is still open, so this
+sample depends on unmerged SDK code. `src/s3_setup.rs` only configures the SDK driver;
+the sample no longer implements its own S3 driver.
 
 The sample sends a 3 MiB string through a Workflow and an echo Activity, checks the
 Workflow result, and shuts down its Worker. Temporal connection configuration is
@@ -20,15 +24,17 @@ Run with local disk (development only; every process must share `payload-store/`
 cargo run
 ```
 
-Run with the example S3 driver and AWS credentials configured in your environment.
+Run with the SDK-provided S3 driver and AWS credentials configured in your environment.
 The crate enables `aws-config/credentials-login` to support `aws login` sessions:
 
 ```sh
 S3_BUCKET=my-temporal-payloads AWS_REGION=us-east-1 cargo run --features s3
 ```
 
-The S3 driver needs `s3:PutObject` and `s3:GetObject` on the bucket's
-`temporal-payloads/` prefix. Keep objects available for Workflow lifetime and
+The S3 driver needs `s3:PutObject` and `s3:GetObject` for the objects under its
+`v0/` prefix, plus `s3:ListBucket` on the bucket. The driver uses `HeadObject` to
+skip existing objects; without `s3:ListBucket`, S3 can return 403 for missing
+objects instead of 404. Keep objects available for Workflow lifetime and
 retention. The sample does not delete objects or configure bucket lifecycle rules.
 Both drivers verify SHA-256 hashes and reuse keys for identical serialized payloads.
 The local driver does not provide atomic writes or production durability.
@@ -55,11 +61,11 @@ The live test covers metadata and ordering, retrieval through a fresh driver
 instance, repeated writes, checksum failures, missing objects, and malformed claims.
 It is ignored by default so ordinary `cargo test` runs need no AWS access.
 
-Verified on November 4, 2026 with AWS login credentials and S3 in `us-east-2`:
-local tests, the live driver test, and the complete 3 MiB Workflow/Activity sample
-passed. Event History contained four External Storage references of 209 bytes each;
-the Service reported a total history size of 2,286 bytes. The temporary test bucket
-and objects were removed afterward.
+Verified on November 6, 2026 using the SDK driver from PR #1721 and AWS login
+credentials in `us-east-2`: the live driver tests and the complete 3 MiB
+Workflow/Activity round trip passed. Event History contained four reference
+tokens (380 to 412 bytes each), with a reported total history size of 3,066 bytes.
+The temporary test objects and bucket were removed afterward.
 
 Live S3 access requires your own bucket and credentials. Snipsync source markers
 are in `src/`. The companion documentation page is being drafted; its public link
