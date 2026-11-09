@@ -1,3 +1,4 @@
+# @@@SNIPSTART ruby-quickstart-workflow
 require 'temporalio/workflow'
 require_relative 'say_hello_activity'
 
@@ -10,3 +11,4 @@ class SayHelloWorkflow < Temporalio::Workflow::Definition
     )
   end
 end
+# @@@SNIPEND

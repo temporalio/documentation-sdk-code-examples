@@ -1,3 +1,4 @@
+# @@@SNIPSTART ruby-quickstart-starter
 require 'temporalio/client'
 require_relative 'say_hello_workflow'
 
@@ -12,3 +13,4 @@ result = client.execute_workflow(
   task_queue: 'my-task-queue'
 )
 puts "Result: #{result}"
+# @@@SNIPEND
