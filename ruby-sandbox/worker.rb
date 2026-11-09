@@ -1,3 +1,4 @@
+# @@@SNIPSTART ruby-quickstart-worker
 require 'temporalio/client'
 require 'temporalio/worker'
 require_relative 'say_hello_activity'
@@ -17,3 +18,4 @@ worker = Temporalio::Worker.new(
 
 # Run the worker until SIGINT. This can be done in many ways, see "Workers" section for details.
 worker.run(shutdown_signals: ['SIGINT'])
+# @@@SNIPEND

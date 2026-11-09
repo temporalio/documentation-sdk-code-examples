@@ -1,3 +1,4 @@
+# @@@SNIPSTART ruby-quickstart-activity
 require 'temporalio/activity'
 
 # Implementation of a simple activity
@@ -6,3 +7,4 @@ class SayHelloActivity < Temporalio::Activity::Definition
     "Hello, #{name}!"
   end
 end
+# @@@SNIPEND
