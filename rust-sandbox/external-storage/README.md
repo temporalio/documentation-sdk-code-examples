@@ -59,15 +59,15 @@ The live test covers metadata and ordering, retrieval through a fresh driver
 instance, repeated writes, checksum failures, missing objects, and malformed claims.
 It is ignored by default so ordinary `cargo test` runs need no AWS access.
 
-Verified on November 6, 2026 using the SDK driver from PR #1721 and AWS login
-credentials in `us-east-2`: the live driver tests and the complete 3 MiB
-Workflow/Activity round trip passed. Event History contained four reference
-tokens (380 to 412 bytes each), with a reported total history size of 3,066 bytes.
-The temporary test objects and bucket were removed afterward.
+Verified on November 10, 2026 with published Rust SDK 1.2.0 and
+`temporalio-aws-s3driver` 0.1.0, using AWS login credentials in `us-east-2`:
+the live S3 driver tests and complete 3 MiB Workflow/Activity round trip passed.
+Event History contained four reference tokens (386 to 418 bytes each), with a
+reported total history size of 3,090 bytes. The temporary S3 objects and bucket
+were deleted and cleanup verified.
 
-With the published crates, build, tests, the S3 all-targets compile check, and the
-3 MiB local-disk Workflow/Activity round trip were rechecked on November 10, 2026.
-The live S3 verification above used the upstream implementation before publication.
+Build, ordinary tests, the S3 all-targets compile check, formatting, and the
+3 MiB local-disk round trip also passed with these published crates.
 
 Live S3 access requires your own bucket and credentials. Snipsync source markers
 are in `src/`. The companion documentation page is being drafted; its public link
