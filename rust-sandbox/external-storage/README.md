@@ -47,21 +47,23 @@ cargo build --features s3
 cargo test --features s3
 ```
 
-To run the live driver test, use a dedicated, disposable bucket. The test writes,
-corrupts, and deletes its own objects:
+To run the live driver test, use a dedicated, disposable bucket. The test stores,
+retrieves, and deletes its own objects:
 
 ```sh
 RUST_EXTERNAL_STORAGE_TEST_BUCKET=my-disposable-bucket AWS_REGION=us-east-2 \
-  cargo test --locked --features s3 s3_live_round_trip_and_failure_paths -- --ignored
+  cargo test --locked --features s3 s3_live_round_trip -- --ignored
 ```
 
-The live test covers metadata and ordering, retrieval through a fresh driver
-instance, repeated writes, checksum failures, missing objects, and malformed claims.
+The live test stores and retrieves payloads through the configured SDK S3 driver,
+using a fresh driver instance to verify retrieval from S3. The local-disk test
+checks a round trip through the example custom driver. Both include a 3 MiB payload
+and verify that metadata is preserved.
 It is ignored by default so ordinary `cargo test` runs need no AWS access.
 
 Verified on November 10, 2026 with published Rust SDK 1.2.0 and
 `temporalio-aws-s3driver` 0.1.0, using AWS login credentials in `us-east-2`:
-the live S3 driver tests and complete 3 MiB Workflow/Activity round trip passed.
+the live S3 round-trip test and complete 3 MiB Workflow/Activity round trip passed.
 Event History contained four reference tokens (386 to 418 bytes each), with a
 reported total history size of 3,090 bytes. The temporary S3 objects and bucket
 were deleted and cleanup verified.

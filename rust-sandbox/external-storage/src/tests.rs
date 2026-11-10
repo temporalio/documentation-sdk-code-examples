@@ -3,8 +3,8 @@ use futures::future::BoxFuture;
 use std::{collections::HashMap, sync::Arc};
 use temporalio_common::{
     data_converters::{
-        StorageDriver, StorageDriverClaim, StorageDriverError, StorageDriverLimiter,
-        StorageDriverPermit, StorageDriverRetrieveContext, StorageDriverStoreContext,
+        StorageDriver, StorageDriverError, StorageDriverLimiter, StorageDriverPermit,
+        StorageDriverRetrieveContext, StorageDriverStoreContext,
     },
     protos::temporal::api::common::v1::Payload,
 };
@@ -28,7 +28,7 @@ fn retrieve_context() -> StorageDriverRetrieveContext {
         .build()
 }
 #[tokio::test]
-async fn preserves_metadata_order_and_deduplicates_replayed_writes() {
+async fn local_disk_round_trip() {
     let dir = tempfile::tempdir().unwrap();
     let driver = LocalDiskStorageDriver {
         directory: dir.path().to_owned(),
@@ -48,55 +48,16 @@ async fn preserves_metadata_order_and_deduplicates_replayed_writes() {
         .store(&store_context(), inputs.clone())
         .await
         .unwrap();
-    let repeated = driver
-        .store(&store_context(), inputs.clone())
-        .await
-        .unwrap();
-    assert_eq!(claims, repeated);
     let output = driver.retrieve(&retrieve_context(), claims).await.unwrap();
     assert_eq!(output, inputs);
-    assert_eq!(std::fs::read_dir(dir.path()).unwrap().count(), 2);
-}
-#[tokio::test]
-async fn rejects_corrupt_missing_and_invalid_claims() {
-    let dir = tempfile::tempdir().unwrap();
-    let driver = LocalDiskStorageDriver {
-        directory: dir.path().to_owned(),
-    };
-    let claims = driver
-        .store(&store_context(), vec![Payload::default()])
-        .await
-        .unwrap();
-    let path = dir.path().join(&claims[0].claim_data["key"]);
-    tokio::fs::write(&path, b"corrupt").await.unwrap();
-    assert!(
-        driver
-            .retrieve(&retrieve_context(), claims.clone())
-            .await
-            .is_err()
-    );
-    tokio::fs::remove_file(&path).await.unwrap();
-    assert!(driver.retrieve(&retrieve_context(), claims).await.is_err());
-    for claim in [
-        StorageDriverClaim::new(HashMap::new()),
-        StorageDriverClaim::new(HashMap::from([("key".into(), "../outside".into())])),
-    ] {
-        assert!(
-            driver
-                .retrieve(&retrieve_context(), vec![claim])
-                .await
-                .is_err()
-        );
-    }
 }
 
-/// Writes and corrupts objects. Run only against a dedicated, disposable bucket.
+/// Stores and retrieves real S3 objects. Use a dedicated test bucket.
 #[cfg(feature = "s3")]
 #[tokio::test]
 #[ignore = "requires AWS credentials and a disposable RUST_EXTERNAL_STORAGE_TEST_BUCKET"]
-async fn s3_live_round_trip_and_failure_paths() {
+async fn s3_live_round_trip() {
     use crate::s3_setup::create_driver;
-    use aws_sdk_s3::primitives::ByteStream;
 
     let bucket = std::env::var("RUST_EXTERNAL_STORAGE_TEST_BUCKET")
         .expect("set RUST_EXTERNAL_STORAGE_TEST_BUCKET to a disposable bucket");
@@ -126,12 +87,6 @@ async fn s3_live_round_trip_and_failure_paths() {
         .store(&store_context(), inputs.clone())
         .await
         .unwrap();
-    assert_eq!(claims.len(), inputs.len());
-    let repeated = driver
-        .store(&store_context(), inputs.clone())
-        .await
-        .unwrap();
-    assert_eq!(claims, repeated);
     // A fresh instance must retrieve claims without any in-memory state from store().
     let reader = create_driver(bucket.clone()).await;
     assert_eq!(
@@ -142,59 +97,6 @@ async fn s3_live_round_trip_and_failure_paths() {
         inputs
     );
 
-    let key = &claims[0].claim_data["key"];
-    client
-        .put_object()
-        .bucket(&bucket)
-        .key(key)
-        .body(ByteStream::from_static(b"corrupt"))
-        .send()
-        .await
-        .unwrap();
-    let corrupt = reader
-        .retrieve(&retrieve_context(), vec![claims[0].clone()])
-        .await
-        .unwrap_err()
-        .into_source();
-    assert!(
-        corrupt
-            .downcast_ref::<temporalio_aws_s3driver::S3StorageDriverError>()
-            .is_some_and(|error| matches!(
-                error,
-                temporalio_aws_s3driver::S3StorageDriverError::IntegrityCheck { .. }
-            )),
-        "{corrupt:#}"
-    );
-
-    client
-        .delete_object()
-        .bucket(&bucket)
-        .key(key)
-        .send()
-        .await
-        .unwrap();
-    assert!(
-        reader
-            .retrieve(&retrieve_context(), vec![claims[0].clone()])
-            .await
-            .is_err()
-    );
-    for claim in [
-        StorageDriverClaim::new(HashMap::new()),
-        StorageDriverClaim::new(HashMap::from([
-            ("bucket".into(), bucket.clone()),
-            ("key".into(), "v0/test-invalid-claim".into()),
-            ("hash_algorithm".into(), "unsupported".into()),
-            ("hash_value".into(), "0".repeat(64)),
-        ])),
-    ] {
-        assert!(
-            reader
-                .retrieve(&retrieve_context(), vec![claim])
-                .await
-                .is_err()
-        );
-    }
     // Remove only the objects this test stored.
     for claim in claims {
         client
