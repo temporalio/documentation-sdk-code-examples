@@ -1,12 +1,10 @@
 # Rust External Storage examples
 
-This independent crate uses an unreleased Rust SDK revision with the `experimental`
-feature. It is isolated from the parent crate to keep existing samples on their
-published SDK dependencies. All Temporal crates, including the SDK-provided `temporalio-aws-s3driver`, are pinned
-to revision `51009718748275da9ece33041d4ace08049cc41e` from
-https://github.com/temporalio/sdk-rust/pull/1721. That PR is still open, so this
-sample depends on unmerged SDK code. `src/s3_setup.rs` only configures the SDK driver;
-the sample no longer implements its own S3 driver.
+This independent crate uses Rust SDK 1.2.0 with the `experimental` feature and
+`temporalio-aws-s3driver` 0.1.0, both published on crates.io. It is isolated from
+the parent crate so its optional S3 dependencies stay separate from other samples.
+`src/s3_setup.rs` configures the SDK-provided driver; the sample does not implement
+its own S3 driver.
 
 The sample sends a 3 MiB string through a Workflow and an echo Activity, checks the
 Workflow result, and shuts down its Worker. Temporal connection configuration is
@@ -66,6 +64,10 @@ credentials in `us-east-2`: the live driver tests and the complete 3 MiB
 Workflow/Activity round trip passed. Event History contained four reference
 tokens (380 to 412 bytes each), with a reported total history size of 3,066 bytes.
 The temporary test objects and bucket were removed afterward.
+
+With the published crates, build, tests, the S3 all-targets compile check, and the
+3 MiB local-disk Workflow/Activity round trip were rechecked on November 10, 2026.
+The live S3 verification above used the upstream implementation before publication.
 
 Live S3 access requires your own bucket and credentials. Snipsync source markers
 are in `src/`. The companion documentation page is being drafted; its public link
