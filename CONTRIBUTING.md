@@ -14,6 +14,7 @@ local validation is still required and must be reported in the PR description.
 | `go-sandbox/` | Go SDK sample, flat files + `_test.go` siblings |
 | `java-sandbox/` | Independent Maven projects, one per sample (e.g. `temporal-hello-world/`, `external-storage/`) |
 | `python-sandbox/` | Flat Python sample files |
+| `php-sandbox/` | Composer project: flat quickstart files, classes under `src/` |
 | `ruby-sandbox/` | Flat Ruby sample files with a `Gemfile` |
 | `rust-sandbox/` | One Cargo crate, topic-per-file |
 | `typescript-sandbox/` | TS sample (npm project) |
@@ -69,6 +70,7 @@ commands you ran in the PR description:
 | Go | `go test ./...` |
 | Java | `mvn verify` (add JUnit 5 + Mockito tests under `src/test/java/` where practical) |
 | Python | `pytest` (use `WorkflowEnvironment`/`ActivityEnvironment` for workflow/activity tests) |
+| PHP | `php -l <file>.php` for each file you changed |
 | Ruby | `ruby -wc <file>.rb` for each file you changed |
 | Rust | `cargo build`, `cargo test` |
 | .NET | `dotnet build` |
@@ -86,6 +88,7 @@ check.
 | Go | `go build ./...`, `go vet ./...` (version from `go.mod`) |
 | Java | `mvn -B -f <module>/pom.xml test-compile -Dmaven.compiler.release=21` for each `*/pom.xml` (JDK 21) |
 | Python | `python -m compileall -q -x '/\.venv/' .` (Python 3.13) |
+| PHP | `composer install`, `php -l` on every `.php` file (PHP 8.3) |
 | Ruby | `ruby -wc` on every `.rb` file (Ruby 3.3) |
 | Rust | `cargo check --all-targets --locked` (stable, with `protoc`) |
 | TypeScript | `npm ci`, `npx tsc --noEmit` (version from `.nvmrc`) |

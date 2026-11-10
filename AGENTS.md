@@ -6,7 +6,7 @@ summarizes what an agent needs to act correctly in this repo.
 ## What this repo is
 
 Standalone SDK sample projects, one per language folder (`go-sandbox/`,
-`java-sandbox/`, `python-sandbox/`, `ruby-sandbox/`, `rust-sandbox/`,
+`java-sandbox/`, `php-sandbox/`, `python-sandbox/`, `ruby-sandbox/`, `rust-sandbox/`,
 `typescript-sandbox/`, `dotnet-sandbox/`), each pulled into docs.temporal.io
 pages via Snipsync snippet markers. Folders are independent — don't add
 cross-language shared tooling.
@@ -41,6 +41,7 @@ be reported in the PR description.
   | Go | `go test ./...` |
   | Java | `mvn verify` |
   | Python | `pytest` |
+  | PHP | `php -l <file>.php` for each changed file |
   | Ruby | `ruby -wc <file>.rb` for each changed file |
   | Rust | `cargo build`, `cargo test` |
   | .NET | `dotnet build` |
