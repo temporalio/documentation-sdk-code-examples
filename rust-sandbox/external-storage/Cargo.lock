@@ -3077,6 +3077,7 @@ dependencies = [
  "prost",
  "sha2 0.10.9",
  "tempfile",
+ "temporalio-aws-s3driver",
  "temporalio-client",
  "temporalio-common",
  "temporalio-macros",
@@ -3086,9 +3087,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "temporalio-aws-s3driver"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "56e87221a60090036c49a627a6409b9c3f0e780d7ca9cade1567da6a8e8c9ac6"
+dependencies = [
+ "aws-sdk-s3",
+ "bon",
+ "futures-util",
+ "prost",
+ "sha2 0.11.1",
+ "temporalio-common",
+ "thiserror",
+]
+
+[[package]]
 name = "temporalio-client"
-version = "1.1.0"
-source = "git+https://github.com/temporalio/sdk-rust?rev=51009f8c1163f333816ef1b2ffa7b66ba82408ba#51009f8c1163f333816ef1b2ffa7b66ba82408ba"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f1d529c517ee4e71a4e1d9f773b392292639eefd0593c48377d124a8939a6309"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3120,8 +3137,9 @@ dependencies = [
 
 [[package]]
 name = "temporalio-common"
-version = "1.1.0"
-source = "git+https://github.com/temporalio/sdk-rust?rev=51009f8c1163f333816ef1b2ffa7b66ba82408ba#51009f8c1163f333816ef1b2ffa7b66ba82408ba"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "59744ea925fedf708b26baff7b059fc43f76d902d09fbbdbbd7668700e4fdfcd"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3157,8 +3175,9 @@ dependencies = [
 
 [[package]]
 name = "temporalio-common-wasm"
-version = "1.1.0"
-source = "git+https://github.com/temporalio/sdk-rust?rev=51009f8c1163f333816ef1b2ffa7b66ba82408ba#51009f8c1163f333816ef1b2ffa7b66ba82408ba"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e067590d09c549cf22cd28f90cc64530743caf85a4f31bb7728b90011174bd77"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3183,8 +3202,9 @@ dependencies = [
 
 [[package]]
 name = "temporalio-macros"
-version = "1.1.0"
-source = "git+https://github.com/temporalio/sdk-rust?rev=51009f8c1163f333816ef1b2ffa7b66ba82408ba#51009f8c1163f333816ef1b2ffa7b66ba82408ba"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "652321f14dfcc7b408166cba43c37bb61e0f239e550e6e296d004d38d33e2b14"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -3193,8 +3213,9 @@ dependencies = [
 
 [[package]]
 name = "temporalio-protos"
-version = "0.10.0"
-source = "git+https://github.com/temporalio/sdk-rust?rev=51009f8c1163f333816ef1b2ffa7b66ba82408ba#51009f8c1163f333816ef1b2ffa7b66ba82408ba"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b92fa39136fb7ea5b87d8981e3429779432b98994d1fcca36ad58925708706f9"
 dependencies = [
  "anyhow",
  "base64 0.23.1",
@@ -3214,8 +3235,9 @@ dependencies = [
 
 [[package]]
 name = "temporalio-sdk"
-version = "1.1.0"
-source = "git+https://github.com/temporalio/sdk-rust?rev=51009f8c1163f333816ef1b2ffa7b66ba82408ba#51009f8c1163f333816ef1b2ffa7b66ba82408ba"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7ded17a02f1a53b49b00cd9aeb5876188cb5ec7bf18f51051700946107b63039"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3242,8 +3264,9 @@ dependencies = [
 
 [[package]]
 name = "temporalio-sdk-core"
-version = "0.10.0"
-source = "git+https://github.com/temporalio/sdk-rust?rev=51009f8c1163f333816ef1b2ffa7b66ba82408ba#51009f8c1163f333816ef1b2ffa7b66ba82408ba"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d808be0baca3e6d889ef8a728448840e51106f9a260276f93ffffe99b957d15d"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -3286,8 +3309,9 @@ dependencies = [
 
 [[package]]
 name = "temporalio-workflow"
-version = "1.1.0"
-source = "git+https://github.com/temporalio/sdk-rust?rev=51009f8c1163f333816ef1b2ffa7b66ba82408ba#51009f8c1163f333816ef1b2ffa7b66ba82408ba"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3e8686c6e4dd3cd1e1c4c83196fffcb4a45600a88828bb4917ae57cb127fa336"
 dependencies = [
  "anyhow",
  "bon",
