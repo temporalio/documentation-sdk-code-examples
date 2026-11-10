@@ -10,6 +10,9 @@ gem "temporalio", "~> 1.9"
 gem "opentelemetry-exporter-otlp", "~> 0.30"
 gem "opentelemetry-sdk", "~> 1.8"
 
+# ActiveModel JSON support used by the data conversion sample
+gem "activemodel", "~> 8.0"
+
 group :test do
   gem "minitest", "~> 5.25"
 end
