@@ -10,6 +10,7 @@ module OpenTelemetry
     def self.configure_metrics_and_tracing
       # Before doing anything, configure the default runtime with OpenTelemetry metrics. Unlike OpenTelemetry tracing in
       # Temporal, OpenTelemetry metrics does not use the Ruby OpenTelemetry library, but rather an internal one.
+      # @@@SNIPSTART ruby-observability-global-tags
       Temporalio::Runtime.default = Temporalio::Runtime.new(
         telemetry: Temporalio::Runtime::TelemetryOptions.new(
           metrics: Temporalio::Runtime::MetricsOptions.new(
@@ -26,6 +27,7 @@ module OpenTelemetry
           )
         )
       )
+      # @@@SNIPEND
       # Globally configure the Ruby OpenTelemetry library for tracing purposes. As of this writing, OpenTelemetry Ruby
       # does not support OTLP over gRPC, so we use the HTTP endpoint instead.
       OpenTelemetry::SDK.configure do |c|

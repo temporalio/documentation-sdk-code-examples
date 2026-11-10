@@ -6,6 +6,10 @@ source "https://rubygems.org"
 
 gem "temporalio", "~> 1.9"
 
+# OpenTelemetry tracing and the OTLP exporter used by the observability samples
+gem "opentelemetry-exporter-otlp", "~> 0.30"
+gem "opentelemetry-sdk", "~> 1.8"
+
 group :test do
   gem "minitest", "~> 5.25"
 end
