@@ -5,14 +5,14 @@ edition = "2024"
 
 [dependencies]
 futures = "0.3"
-temporalio-client = "1.0.0"
-temporalio-common = "1.0.0"
-temporalio-macros = "1.0.0"
+temporalio-client = "1.2.0"
+temporalio-common = "1.2.0"
+temporalio-macros = "1.2.0"
 # Nexus Operations from a Workflow need the experimental feature.
-temporalio-sdk = { version = "1.0.0", features = ["experimental"] }
-temporalio-workflow = "1.0.0"
+temporalio-sdk = { version = "1.2.0", features = ["experimental"] }
+temporalio-workflow = "1.2.0"
 tokio = { version = "1", features = ["full"] }
 
 [dev-dependencies]
-temporalio-sdk = { version = "1.0.0", features = ["experimental", "testing"] }
+temporalio-sdk = { version = "1.2.0", features = ["experimental", "testing"] }
 tonic = "0.14"
