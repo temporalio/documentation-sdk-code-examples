@@ -21,6 +21,8 @@
     "nexus.workflow": "ts-node src/nexus/feature-guide/starter.ts",
     "nexus-standalone.worker": "ts-node src/nexus/standalone-operations/worker/worker.ts",
     "nexus-standalone.starter": "ts-node src/nexus/standalone-operations/starter.ts",
+    "batch-iterator.worker": "ts-node src/cloud-quickstarts/batch-iterator/worker.ts",
+    "batch-iterator.client": "ts-node src/cloud-quickstarts/batch-iterator/client.ts",
     "build:protos": "pbjs -t json-module -w commonjs -r protobuf-sample -o src/best-practices/data-handling/data-conversion/protobufs/protos/json-module.js src/best-practices/data-handling/data-conversion/protobufs/protos/*.proto && pbjs -t static-module src/best-practices/data-handling/data-conversion/protobufs/protos/*.proto | pbts -o src/best-practices/data-handling/data-conversion/protobufs/protos/root.d.ts -",
     "test": "mocha --exit --node-option no-experimental-strip-types --require ts-node/register --require source-map-support/register src/mocha/*.test.ts src/best-practices/testing/test/*.test.ts"
   },
