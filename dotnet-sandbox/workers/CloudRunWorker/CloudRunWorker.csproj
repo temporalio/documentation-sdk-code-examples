@@ -8,9 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Temporalio" Version="1.21.0" />
-    <PackageReference Include="Temporalio.Extensions.Gcp.CloudRun.Id" Version="1.21.0" />
-    <PackageReference Include="Temporalio.Extensions.Gcp.CloudRun.OpenTelemetry" Version="1.21.0" />
+    <PackageReference Include="Temporalio" Version="1.22.0" />
+    <PackageReference Include="Temporalio.Extensions.Gcp.CloudRun.Id" Version="1.22.0" />
+    <PackageReference Include="Temporalio.Extensions.Gcp.CloudRun.OpenTelemetry" Version="1.22.0" />
   </ItemGroup>
 
 </Project>
