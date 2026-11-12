@@ -4,7 +4,7 @@ source "https://rubygems.org"
 
 # gem "rails"
 
-gem "temporalio", "~> 1.9"
+gem "temporalio", "~> 1.11"
 
 # OpenTelemetry tracing and the OTLP exporter used by the observability samples
 gem "opentelemetry-exporter-otlp", "~> 0.30"
