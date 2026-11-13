@@ -138,6 +138,23 @@ workflows/message-passing/test.sh
 php -d zend.assertions=1 workflows/message-passing/test-client.php
 ```
 
+## Schedules
+
+Samples for [Schedules](https://docs.temporal.io/develop/php/workflows/schedules)
+in `workflows/schedules/`.
+
+| File | Snippet |
+|---|---|
+| `workflows/schedules/WorkflowStarter.php` | `php-schedules-start-delay`, `php-schedules-cron` |
+
+`test.php` checks the options the SDK sends when it starts each Workflow, the
+same way as the Workflow timeouts test. The fake service rejects the second
+start of the Cron Workflow as already started, to exercise the `catch` block.
+
+```sh
+php workflows/schedules/test.php
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
