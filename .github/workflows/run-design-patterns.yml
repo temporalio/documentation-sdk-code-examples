@@ -38,7 +38,7 @@ jobs:
           cache: npm
           cache-dependency-path: typescript-sandbox/package-lock.json
       - name: Install Temporal CLI
-        uses: temporalio/setup-temporal@v0
+        uses: temporalio/setup-temporal@1059a504f87e7fa2f385e3fa40d1aa7e62f1c6ca # v0
       - name: Run each manifest
         run: |
           status=0

@@ -12,6 +12,7 @@ the matching doc pages.
 | [`go-sandbox/`](go-sandbox/) | Go module, with `_test.go` files next to the code they test |
 | [`java-sandbox/`](java-sandbox/) | Independent Maven projects, one per sample (e.g. `temporal-hello-world/`, `external-storage/`) |
 | [`python-sandbox/`](python-sandbox/) | Flat Python sample files |
+| [`php-sandbox/`](php-sandbox/) | Composer project: flat quickstart files, classes under `src/` |
 | [`ruby-sandbox/`](ruby-sandbox/) | Flat Ruby sample files with a `Gemfile` |
 | [`rust-sandbox/`](rust-sandbox/) | One Cargo crate, one topic per file |
 | [`typescript-sandbox/`](typescript-sandbox/) | npm project |
@@ -57,6 +58,7 @@ folder you changed. A break in any sandbox fails the check.
 | Go | `go-sandbox/` | `go build ./...` and `go vet ./...` (Go version from `go.mod`) |
 | Java | `java-sandbox/` | `mvn -B -f <module>/pom.xml test-compile -Dmaven.compiler.release=21` for **each** `*/pom.xml` (JDK 21) |
 | Python | `python-sandbox/` | `python -m compileall -q -x '/\.venv/' .` (Python 3.13) |
+| PHP | `php-sandbox/` | `composer install` and `php -l` on every `.php` file (PHP 8.3) |
 | Ruby | `ruby-sandbox/` | `ruby -wc` on every `.rb` file (Ruby 3.3) |
 | Rust | `rust-sandbox/` | `cargo check --all-targets --locked` (stable toolchain, with `protoc` installed) |
 | TypeScript | `typescript-sandbox/` | `npm ci` and `npx tsc --noEmit` (Node version from `.nvmrc`) |
@@ -91,6 +93,7 @@ the PR description:
 | Go | `go test ./...` |
 | Java | `mvn verify` (in each module you changed) |
 | Python | `pytest` |
+| PHP | `php -l <file>.php` for each file you changed |
 | Ruby | `ruby -wc <file>.rb` for each file you changed |
 | Rust | `cargo build`, `cargo test` |
 | .NET | `dotnet build` |
@@ -145,6 +148,18 @@ S3AsyncClient s3Client = S3AsyncClient.builder().region(Region.US_EAST_2).build(
 ```
 
 - Use `#` instead of `//` for Python and Ruby.
+- In PHP, Snipsync leaves out the marker line, and nothing can come before
+  `<?php`. To include `<?php` in a whole-file snippet, put the marker on the
+  first line and reopen the tag on the next line:
+
+  ```php
+  <?php // @@@SNIPSTART php-quickstart-worker ?>
+  <?php
+  declare(strict_types=1);
+  ```
+
+  The closing `?>` swallows its newline, so the file prints nothing and
+  `declare(strict_types=1)` still works.
 - Name snippets `<language>-<topic>-<detail>`, e.g. `java-s3-driver-create`.
 - Names must be unique across the whole repo. Before you add one, check for
   collisions:
