@@ -1,7 +1,8 @@
 {
     "name": "myproject/quickstart",
     "require": {
-        "temporal/sdk": "^2.16"
+        "php": ">=8.2",
+        "temporal/sdk": "^2.20"
     },
     "autoload": {
         "psr-4": {
