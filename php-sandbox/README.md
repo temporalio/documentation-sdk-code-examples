@@ -1,6 +1,11 @@
 # PHP sandbox
 
-Composer project for the [PHP SDK quickstart](https://docs.temporal.io/develop/php/set-up-your-local-php).
+Composer project for the PHP SDK docs code samples. The project root holds the
+[PHP SDK quickstart](https://docs.temporal.io/develop/php/set-up-your-local-php).
+Samples for other pages live in a folder per page, such as `workflows/basics/`,
+and are autoloaded through the `classmap` entry in `composer.json`.
+
+## Quickstart
 
 | File | Snippet |
 |---|---|
@@ -10,7 +15,7 @@ Composer project for the [PHP SDK quickstart](https://docs.temporal.io/develop/p
 | `client.php` | `php-quickstart-client` |
 | `.rr.yaml` | `php-quickstart-rr-yaml` |
 
-## Run it
+### Run it
 
 Requires PHP 8.2+ with the `grpc` extension, and the Temporal CLI.
 
@@ -21,6 +26,31 @@ temporal server start-dev  # in another terminal
 ./rr serve                 # in another terminal; runs worker.php
 php client.php             # prints "Result: Hello, Temporal!"
 ```
+
+## Workflow basics
+
+Samples for [Workflow basics](https://docs.temporal.io/develop/php/workflows/basics)
+in `workflows/basics/`.
+
+| File | Snippet |
+|---|---|
+| `workflows/basics/define/FileProcessingWorkflow.php` | `php-workflow-basics-define` |
+| `workflows/basics/Argument.php` | `php-workflow-basics-argument` |
+| `workflows/basics/return-values/FileProcessingWorkflow.php` | `php-workflow-basics-return-type` |
+| `workflows/basics/custom-name/FileProcessingWorkflow.php` | `php-workflow-basics-custom-name` |
+| `workflows/basics/default-name/YourWorkflowDefinitionInterface.php` | `php-workflow-basics-default-name` |
+| `workflows/basics/workflow-init/GreetingExample.php` | `php-workflow-basics-workflow-init` |
+
+`workflows/basics/worker.php` registers each Workflow on its own Task Queue.
+`workflows/basics/test.sh` starts a dev server and RoadRunner, runs each
+Workflow with the Temporal CLI, and checks the result. It needs `jq` and the
+`rr` binary in this folder.
+
+```sh
+workflows/basics/test.sh
+```
+
+## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
 `<?php`, so the snippet on the docs page includes the opening tag. See
