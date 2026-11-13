@@ -122,6 +122,22 @@ cleanup, and that the Workflow waits for it.
 workflows/cancellation/test.sh
 ```
 
+## Workflow message passing
+
+Samples for [Workflow message passing](https://docs.temporal.io/develop/php/workflows/message-passing)
+in `workflows/message-passing/`, one folder per example. Client code is in
+`client/MessagePassingClient.php`. Snippet names start with `php-message-passing-`.
+
+`test.sh` runs every Workflow on a dev server and sends Signals, Queries, and
+Updates with the Temporal CLI. `test-client.php` runs the Client code against a
+fake Temporal Service, the same way as the Workflow timeouts test, with canned
+Workflow, Query, and Update results.
+
+```sh
+workflows/message-passing/test.sh
+php -d zend.assertions=1 workflows/message-passing/test-client.php
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
