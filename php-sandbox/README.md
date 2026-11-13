@@ -50,6 +50,25 @@ Workflow with the Temporal CLI, and checks the result. It needs `jq` and the
 workflows/basics/test.sh
 ```
 
+## Child Workflows
+
+Samples for [Child Workflows](https://docs.temporal.io/develop/php/workflows/child-workflows)
+in `workflows/child-workflows/`.
+
+| File | Snippet |
+|---|---|
+| `workflows/child-workflows/StubParentWorkflow.php` | `php-child-workflows-stub` |
+| `workflows/child-workflows/ExecuteParentWorkflow.php` | `php-child-workflows-execute` |
+| `workflows/child-workflows/AbandonParentWorkflow.php` | `php-child-workflows-parent-close-policy` |
+
+`ChildWorkflow.php` and `LongRunningChildWorkflow.php` are the children the
+parents start. `worker.php` registers them all on the `child-workflows` Task
+Queue, and `test.sh` runs each parent the same way as the Workflow basics test.
+
+```sh
+workflows/child-workflows/test.sh
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
