@@ -105,6 +105,23 @@ in for the connection, and an interceptor records each request.
 php workflows/timeouts/test.php
 ```
 
+## Cancellation
+
+Samples for [Cancellation](https://docs.temporal.io/develop/php/workflows/cancellation)
+in `workflows/cancellation/`.
+
+| File | Snippet |
+|---|---|
+| `workflows/cancellation/CancelActivityWorkflow.php` | `php-cancellation-cancel-activity` |
+| `workflows/cancellation/MyActivity.php` | `php-cancellation-activity` |
+
+`test.sh` runs the Workflow and checks that the Activity is canceled, runs its
+cleanup, and that the Workflow waits for it.
+
+```sh
+workflows/cancellation/test.sh
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
