@@ -88,6 +88,23 @@ continues as new, and checks that the state carries over into the new run.
 workflows/continue-as-new/test.sh
 ```
 
+## Workflow timeouts
+
+Samples for [Workflow Timeouts](https://docs.temporal.io/develop/php/workflows/timeouts)
+in `workflows/timeouts/`.
+
+| File | Snippet |
+|---|---|
+| `workflows/timeouts/WorkflowStarter.php` | `php-workflow-timeouts-execution-timeout`, `php-workflow-timeouts-retry-policy` |
+
+`test.php` checks the options the SDK sends when it starts each Workflow. It
+doesn't need a Temporal Service or the `grpc` extension: a fake gRPC stub stands
+in for the connection, and an interceptor records each request.
+
+```sh
+php workflows/timeouts/test.php
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
