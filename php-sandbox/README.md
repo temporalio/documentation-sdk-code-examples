@@ -155,6 +155,21 @@ start of the Cron Workflow as already started, to exercise the `catch` block.
 php workflows/schedules/test.php
 ```
 
+## Timers
+
+Samples for [Timers](https://docs.temporal.io/develop/php/workflows/timers)
+in `workflows/timers/`.
+
+| File | Snippet |
+|---|---|
+| `workflows/timers/TimerWorkflow.php` | `php-timers-sleep` |
+
+`test.sh` starts the Workflow and checks that it starts a 300-second Timer.
+
+```sh
+workflows/timers/test.sh
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
