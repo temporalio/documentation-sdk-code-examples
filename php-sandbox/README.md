@@ -69,6 +69,25 @@ Queue, and `test.sh` runs each parent the same way as the Workflow basics test.
 workflows/child-workflows/test.sh
 ```
 
+## Continue-As-New
+
+Samples for [Continue-As-New](https://docs.temporal.io/develop/php/workflows/continue-as-new)
+in `workflows/continue-as-new/`, a smaller version of the samples-php
+`SafeMessageHandlers` cluster manager without Activities.
+
+| File | Snippet |
+|---|---|
+| `workflows/continue-as-new/ClusterManagerInput.php` | `php-continue-as-new-input` |
+| `workflows/continue-as-new/MessageHandlerWorkflowInterface.php` | `php-continue-as-new-interface` |
+| `workflows/continue-as-new/MessageHandlerWorkflow.php` | `php-continue-as-new-call`, `php-continue-as-new-should-continue-as-new` |
+
+`test.sh` starts the Workflow with `testContinueAsNew`, sends Updates until it
+continues as new, and checks that the state carries over into the new run.
+
+```sh
+workflows/continue-as-new/test.sh
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
