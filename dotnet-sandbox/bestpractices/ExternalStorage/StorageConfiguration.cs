@@ -22,7 +22,7 @@ public static class StorageConfiguration
     {
         // @@@SNIPSTART dotnet-external-storage-multiple-drivers
         var storage = new ExternalStorage(
-            new[] { preferred, legacy },
+            new IStorageDriver[] { preferred, legacy },
             (context, payload) => preferred);
         // @@@SNIPEND
         return storage;

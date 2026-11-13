@@ -23,7 +23,28 @@ public sealed class LocalDiskStorageDriver(string directory) : IStorageDriver
         {
             var bytes = payload.ToByteArray();
             var key = Convert.ToHexString(SHA256.HashData(bytes)).ToLowerInvariant();
-            await File.WriteAllBytesAsync(Path.Combine(directory, key), bytes, cancellationToken);
+            var path = Path.Combine(directory, key);
+            if (!File.Exists(path))
+            {
+                // Publish only complete files; concurrent writers leave existing payloads intact.
+                var temporaryPath = Path.Combine(directory, $".{Guid.NewGuid():N}.tmp");
+                try
+                {
+                    await File.WriteAllBytesAsync(temporaryPath, bytes, cancellationToken);
+                    try
+                    {
+                        File.Move(temporaryPath, path, overwrite: false);
+                    }
+                    catch (IOException) when (File.Exists(path))
+                    {
+                        // Another writer published the same payload first.
+                    }
+                }
+                finally
+                {
+                    File.Delete(temporaryPath);
+                }
+            }
             claims.Add(new StorageDriverClaim(new Dictionary<string, string> { ["key"] = key }));
         }
         return claims;
