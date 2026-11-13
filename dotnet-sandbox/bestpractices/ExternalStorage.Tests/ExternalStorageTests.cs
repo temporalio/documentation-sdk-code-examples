@@ -15,7 +15,8 @@ public class ExternalStorageTests
         var directory = Path.Combine(Path.GetTempPath(), $"temporal-dotnet-storage-{Guid.NewGuid():N}");
         try
         {
-            await VerifyRoundTripAsync(new LocalDiskStorageDriver(directory));
+            var driver = new LocalDiskStorageDriver(directory);
+            await Task.WhenAll(VerifyRoundTripAsync(driver), VerifyRoundTripAsync(driver));
         }
         finally
         {

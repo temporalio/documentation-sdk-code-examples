@@ -28,8 +28,9 @@ dotnet run
 ```
 
 Local storage defaults to `./payload-store`; set `PAYLOAD_STORE_DIR` to change it.
-Every Client and Worker must share that directory. This driver is for development
-and does not provide atomic writes or production durability.
+Every Client and Worker must share that directory. The driver publishes complete
+files without overwriting existing payloads. It is for development and does not
+provide production durability.
 
 Temporal connection options come from `ClientEnvConfig.LoadClientConnectOptions`,
 with `localhost:7233` as the default address. For example, set `TEMPORAL_ADDRESS`
