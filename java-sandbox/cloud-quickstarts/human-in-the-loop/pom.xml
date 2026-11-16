@@ -1,0 +1,101 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.temporal.docs</groupId>
+    <artifactId>cloud-quickstarts-human-in-the-loop</artifactId>
+    <version>1.0.0</version>
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <temporal.version>1.40.0</temporal.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.temporal</groupId>
+            <artifactId>temporal-sdk</artifactId>
+            <version>${temporal.version}</version>
+        </dependency>
+
+        <!-- Environment configuration: ClientConfigProfile.load() reads TEMPORAL_PROFILE + the TOML file. -->
+        <dependency>
+            <groupId>io.temporal</groupId>
+            <artifactId>temporal-envconfig</artifactId>
+            <version>${temporal.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.openai</groupId>
+            <artifactId>openai-java</artifactId>
+            <version>4.96.0</version>
+        </dependency>
+
+        <!-- An SLF4J binding so the console prints Workflow and Activity logs. -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.20</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.temporal</groupId>
+            <artifactId>temporal-testing</artifactId>
+            <version>${temporal.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.13.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.3</version>
+            </plugin>
+
+            <!--
+              Runners, each started with `mvn -q compile exec:java@<id>`:
+                worker         runs the Worker
+                client         starts the Workflow (optional request in -Dexec.args)
+                send-approval  sends a decision (-Dexec.args="approve|reject [notes]")
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.1</version>
+                <executions>
+                    <execution>
+                        <id>worker</id>
+                        <configuration>
+                            <mainClass>quickstart.Worker</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>client</id>
+                        <configuration>
+                            <mainClass>quickstart.Client</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>send-approval</id>
+                        <configuration>
+                            <mainClass>quickstart.SendApproval</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
