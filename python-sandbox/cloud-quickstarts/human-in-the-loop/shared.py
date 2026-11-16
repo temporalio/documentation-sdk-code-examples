@@ -6,6 +6,10 @@ from pydantic import BaseModel
 # between the Worker and the client.
 TASK_QUEUE = os.getenv("TEMPORAL_TASK_QUEUE", "quickstart-human-in-the-loop")
 
+# A fixed Workflow ID, so approval commands can be written as fixed text.
+# Only one Workflow with this ID can run at a time.
+WORKFLOW_ID = os.getenv("HUMAN_IN_THE_LOOP_WORKFLOW_ID", "human-in-the-loop")
+
 
 class WorkflowInput(BaseModel):
     """Input for HumanInTheLoopWorkflow."""
@@ -33,9 +37,12 @@ class ApprovalRequest(BaseModel):
 
 
 class ApprovalDecision(BaseModel):
-    """Decision a human reviewer sends back with a Signal."""
+    """Decision a human reviewer sends back with a Signal.
 
-    request_id: str
+    Leave out request_id to apply the decision to whichever request is pending.
+    """
+
     approved: bool
+    request_id: str | None = None
     reviewer_notes: str | None = None
-    decided_at: str
+    decided_at: str | None = None

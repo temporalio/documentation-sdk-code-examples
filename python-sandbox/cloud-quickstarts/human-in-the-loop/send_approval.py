@@ -6,19 +6,19 @@ from temporalio.client import Client
 from temporalio.contrib.pydantic import pydantic_data_converter
 from temporalio.envconfig import ClientConfig
 
-from shared import ApprovalDecision
+from shared import WORKFLOW_ID, ApprovalDecision
 from workflow import HumanInTheLoopWorkflow
 
-USAGE = "Usage: uv run send_approval.py <workflow-id> <request-id> <approve|reject> [notes]"
+USAGE = "Usage: uv run send_approval.py <approve|reject> [notes]"
 
 
 async def main() -> None:
-    if len(sys.argv) < 4 or sys.argv[3].lower() not in ("approve", "reject"):
+    if len(sys.argv) < 2 or sys.argv[1].lower() not in ("approve", "reject"):
         print(USAGE)
         sys.exit(1)
 
-    workflow_id, request_id, decision = sys.argv[1], sys.argv[2], sys.argv[3].lower()
-    notes = sys.argv[4] if len(sys.argv) > 4 else None
+    decision = sys.argv[1].lower()
+    notes = sys.argv[2] if len(sys.argv) > 2 else None
 
     # Same environment-configuration lookup the Worker and client use.
     connect_config = ClientConfig.load_client_connect_config()
@@ -26,19 +26,19 @@ async def main() -> None:
 
     client = await Client.connect(**connect_config, data_converter=pydantic_data_converter)
 
-    # Deliver the reviewer's decision to the waiting Workflow as a Signal.
-    handle = client.get_workflow_handle(workflow_id)
+    # Deliver the reviewer's decision to the waiting Workflow as a Signal. With
+    # no request_id, it applies to whichever request is pending.
+    handle = client.get_workflow_handle(WORKFLOW_ID)
     await handle.signal(
         HumanInTheLoopWorkflow.approval_decision,
         ApprovalDecision(
-            request_id=request_id,
             approved=decision == "approve",
             reviewer_notes=notes,
             decided_at=datetime.now(timezone.utc).isoformat(),
         ),
     )
 
-    print(f"Sent {decision} decision to Workflow {workflow_id}")
+    print(f"Sent {decision} decision to Workflow {WORKFLOW_ID}")
 
 
 if __name__ == "__main__":

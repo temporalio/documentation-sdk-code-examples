@@ -70,8 +70,13 @@ async def notify_approval_needed(request: ApprovalRequest) -> None:
     print(f"Description: {request.proposed_action.description}")
     print(f"Reasoning:   {request.proposed_action.reasoning}")
     print("\nTo approve or reject, run:")
-    print(f"  uv run send_approval.py {workflow_id} {request.request_id} approve 'Looks good'")
-    print(f"  uv run send_approval.py {workflow_id} {request.request_id} reject 'Too risky'")
+    print("  uv run send_approval.py approve 'Looks good'")
+    print("  uv run send_approval.py reject 'Too risky'")
+    print("\nOr with the Temporal CLI:")
+    print(
+        f"  temporal workflow signal --workflow-id {workflow_id} "
+        "--name approval_decision --input '{\"approved\": true}'"
+    )
     print(f"{'=' * 60}\n", flush=True)
 
 

@@ -1,12 +1,12 @@
 import asyncio
 import sys
-import time
 
 from temporalio.client import Client
+from temporalio.exceptions import WorkflowAlreadyStartedError
 from temporalio.contrib.pydantic import pydantic_data_converter
 from temporalio.envconfig import ClientConfig
 
-from shared import TASK_QUEUE, WorkflowInput
+from shared import TASK_QUEUE, WORKFLOW_ID, WorkflowInput
 from workflow import HumanInTheLoopWorkflow
 
 DEFAULT_REQUEST = "Delete all test data from the production database"
@@ -23,12 +23,20 @@ async def main() -> None:
 
     client = await Client.connect(**connect_config, data_converter=pydantic_data_converter)
 
-    handle = await client.start_workflow(
-        HumanInTheLoopWorkflow.run,
-        WorkflowInput(user_request=user_request, approval_timeout_seconds=300),
-        id=f"human-in-the-loop-{time.time_ns() // 1_000_000}",
-        task_queue=TASK_QUEUE,
-    )
+    try:
+        handle = await client.start_workflow(
+            HumanInTheLoopWorkflow.run,
+            WorkflowInput(user_request=user_request, approval_timeout_seconds=300),
+            id=WORKFLOW_ID,
+            task_queue=TASK_QUEUE,
+        )
+    except WorkflowAlreadyStartedError:
+        print(
+            f"Workflow {WORKFLOW_ID} is already running. Approve or reject it, wait "
+            "for it to time out, or terminate it:\n"
+            f"  temporal workflow terminate --workflow-id {WORKFLOW_ID}"
+        )
+        sys.exit(1)
 
     address = connect_config.get("target_host")
     namespace = connect_config.get("namespace") or "default"

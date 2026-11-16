@@ -92,8 +92,11 @@ class HumanInTheLoopWorkflow:
 
     @workflow.signal
     async def approval_decision(self, decision: ApprovalDecision) -> None:
-        # Ignore decisions meant for an earlier or unknown request.
-        if decision.request_id == self.pending_request_id:
+        if self.pending_request_id is None:
+            workflow.logger.warning("Ignoring decision: no approval request is pending")
+        # A decision without a request_id applies to the pending request. One
+        # with a request_id must match it, so a stale decision is ignored.
+        elif decision.request_id in (None, self.pending_request_id):
             self.current_decision = decision
         else:
             workflow.logger.warning(

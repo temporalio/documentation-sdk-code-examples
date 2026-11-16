@@ -21,7 +21,7 @@ Workflow cancels the action.
 | `shared.py` | Shared Task Queue name and the Pydantic models passed between the Workflow, Activities, and clients. |
 | `worker.py` | Worker that connects via `ClientConfig.load_client_connect_config()` and hosts the Workflow and Activities. |
 | `client.py` | Starts the Workflow for a request and waits for the result. |
-| `send_approval.py` | Sends an approve or reject decision to a waiting Workflow as a Signal. |
+| `send_approval.py` | Sends an approve or reject decision to the waiting Workflow as a Signal. |
 | `test_human_in_the_loop.py` | Runs the auto-approve, approve, reject, and timeout paths in a time-skipping test environment, with the OpenAI call mocked, plus a check of the no-API-key fallback. |
 | `config.toml` | Reference profiles (`default` for local, `cloud` for Temporal Cloud). |
 
@@ -66,19 +66,34 @@ production database"). Pass your own request as an argument:
 uv run client.py "List the files in the reports folder"
 ```
 
+The Workflow always uses the ID `human-in-the-loop` (set
+`HUMAN_IN_THE_LOOP_WORKFLOW_ID` to change it), so only one can run at a time.
 When the model marks the action as risky, the Worker prints an
-`APPROVAL REQUIRED` block with the Workflow ID, the request ID, and the commands
-to approve or reject. Run one of them in a fourth terminal:
+`APPROVAL REQUIRED` block. Approve or reject in a fourth terminal:
 
 ```bash
-uv run send_approval.py <workflow-id> <request-id> approve "Looks good"
-uv run send_approval.py <workflow-id> <request-id> reject "Too risky"
+uv run send_approval.py approve "Looks good"
+uv run send_approval.py reject "Too risky"
 ```
+
+The decision is a Signal named `approval_decision`, so you can also send it
+with the Temporal CLI, or with **Send a Signal** on the Workflow's page in the
+Temporal UI, using the same JSON input:
+
+```bash
+temporal workflow signal --workflow-id human-in-the-loop \
+  --name approval_decision \
+  --input '{"approved": true, "reviewer_notes": "Looks good"}'
+```
+
+The Signal applies to whichever approval request is pending. To target one
+request, add its `request_id` (printed by the Worker) to the JSON input. The
+Workflow then ignores a decision whose `request_id` doesn't match.
 
 Expected client output after you approve:
 
 ```
-Started Workflow human-in-the-loop-1794497439014 against localhost:7233 (namespace: default)...
+Started Workflow human-in-the-loop against localhost:7233 (namespace: default)...
 Request: Delete all test data from the production database
 If the action is risky, the Worker prints how to approve or reject it.
 Result: Action completed successfully: Successfully executed: delete_test_data
@@ -89,6 +104,9 @@ can vary between runs. Without one, the mock always proposes `delete_test_data`
 and always asks for approval, even for a safe request. If you send no decision, the Workflow returns
 `Action cancelled: approval request timed out after 300 seconds`.
 
+If you start the client while an earlier run is still waiting, it exits and
+tells you to approve, reject, or terminate that run first.
+
 ## Run against Temporal Cloud
 
 Fill in the `cloud` profile (see `config.toml`), then select it:
@@ -96,7 +114,7 @@ Fill in the `cloud` profile (see `config.toml`), then select it:
 ```bash
 TEMPORAL_PROFILE=cloud uv run worker.py                  # terminal 1
 TEMPORAL_PROFILE=cloud uv run client.py                  # terminal 2
-TEMPORAL_PROFILE=cloud uv run send_approval.py ...       # terminal 3
+TEMPORAL_PROFILE=cloud uv run send_approval.py approve   # terminal 3
 ```
 
 ## Run the test

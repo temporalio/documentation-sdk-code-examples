@@ -40,7 +40,9 @@ async def mock_execute(action: ProposedAction) -> str:
     return f"Executed: {action.action_type}"
 
 
-async def run_workflow(action: ProposedAction, timeout_seconds: int, decide=None) -> str:
+async def run_workflow(
+    action: ProposedAction, timeout_seconds: int, decide=None, with_request_id=True
+) -> str:
     """Run the Workflow with mocked Activities. If `decide` is set, send it as
     the reviewer's (approved, notes) once approval is requested."""
     requests: asyncio.Queue[ApprovalRequest] = asyncio.Queue()
@@ -73,7 +75,7 @@ async def run_workflow(action: ProposedAction, timeout_seconds: int, decide=None
                 await handle.signal(
                     HumanInTheLoopWorkflow.approval_decision,
                     ApprovalDecision(
-                        request_id=request.request_id,
+                        request_id=request.request_id if with_request_id else None,
                         approved=approved,
                         reviewer_notes=notes,
                         decided_at="2026-01-01T00:00:00Z",
@@ -89,6 +91,13 @@ async def test_safe_action_is_auto_approved():
 
 async def test_risky_action_runs_when_approved():
     result = await run_workflow(RISKY, timeout_seconds=300, decide=(True, "Looks good"))
+    assert result == "Action completed successfully: Executed: delete_data"
+
+
+async def test_decision_without_request_id_applies_to_pending_request():
+    result = await run_workflow(
+        RISKY, timeout_seconds=300, decide=(True, "Looks good"), with_request_id=False
+    )
     assert result == "Action completed successfully: Executed: delete_data"
 
 
