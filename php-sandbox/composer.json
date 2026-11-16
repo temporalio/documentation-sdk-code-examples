@@ -12,7 +12,8 @@
         "classmap": [
             "workflows/",
             "activities/",
-            "client/"
+            "client/",
+            "workers/"
         ],
         "exclude-from-classmap": [
             "**/test.php",

@@ -3,7 +3,7 @@
 Composer project for the PHP SDK docs code samples. The project root holds the
 [PHP SDK quickstart](https://docs.temporal.io/develop/php/set-up-your-local-php).
 Samples for other pages live in a folder per page, such as `workflows/basics/`,
-`activities/basics/`, or `client/temporal-client/`, and are autoloaded through the `classmap` entry in
+`activities/basics/`, `client/temporal-client/`, or `workers/run-worker-process/`, and are autoloaded through the `classmap` entry in
 `composer.json`.
 
 ## Quickstart
@@ -321,6 +321,28 @@ CLI, then runs PHPStan, lints `rr-cloud.yaml`, and runs `test-client.php`.
 
 ```sh
 client/temporal-client/test.sh
+```
+
+## Run a Worker
+
+Samples for [Run a Worker](https://docs.temporal.io/develop/php/workers/run-worker-process)
+in `workers/run-worker-process/`. Snippet names start with `php-run-worker-`.
+
+- `worker.php` and `.rr.yaml` are the Worker file and RoadRunner configuration
+  from the page.
+- `WorkerExamples.php` holds the other examples: Task Queue name,
+  `WorkerOptions`, API key credentials, registering types, an Activity factory,
+  and an Activity finalizer. `examples-worker.php` combines them into a Worker.
+- `Container.php` and `Kernel.php` stand in for an application's dependency
+  injection container and kernel.
+
+`test.sh` runs `worker.php` under RoadRunner with the page's `.rr.yaml`
+(address and RPC port overridden for the dev server) and `examples-worker.php`
+with `examples.rr.yaml`, then runs a Workflow on each Task Queue and checks that
+the finalizer ran after each Activity.
+
+```sh
+workers/run-worker-process/test.sh
 ```
 
 ## Snipsync markers

@@ -1,0 +1,14 @@
+# RoadRunner configuration for examples-worker.php. Used by test.sh.
+version: "3"
+
+rpc:
+  listen: tcp://127.0.0.1:${RR_RPC_PORT:-6002}
+
+server:
+  command: "php examples-worker.php"
+
+temporal:
+  address: ${TEMPORAL_ADDRESS:-127.0.0.1:7233}
+
+logs:
+  level: info
