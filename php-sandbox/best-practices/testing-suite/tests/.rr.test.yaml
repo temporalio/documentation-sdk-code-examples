@@ -1,0 +1,22 @@
+version: "3"
+
+rpc:
+  listen: tcp://127.0.0.1:${RR_RPC_PORT:-6001}
+
+server:
+  command: "php worker.test.php"
+
+temporal:
+  address: ${TEMPORAL_ADDRESS:-127.0.0.1:7233}
+
+logs:
+  level: info
+
+# @@@SNIPSTART php-testing-rr-kv
+# tests/.rr.test.yaml
+kv:
+  test:
+    driver: memory
+    config:
+      interval: 10
+# @@@SNIPEND

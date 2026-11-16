@@ -14,7 +14,8 @@
             "activities/",
             "client/",
             "workers/",
-            "platform/"
+            "platform/",
+            "best-practices/"
         ],
         "exclude-from-classmap": [
             "**/test.php",
@@ -22,6 +23,7 @@
         ]
     },
     "require-dev": {
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^12"
     }
 }
