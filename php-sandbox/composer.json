@@ -2,7 +2,8 @@
     "name": "myproject/quickstart",
     "require": {
         "php": ">=8.2",
-        "temporal/sdk": "^2.20"
+        "temporal/sdk": "^2.20",
+        "aws/aws-sdk-php": "^3.300"
     },
     "autoload": {
         "psr-4": {
@@ -11,6 +12,10 @@
         "classmap": [
             "workflows/",
             "activities/"
+        ],
+        "exclude-from-classmap": [
+            "**/test.php",
+            "**/test-client.php"
         ]
     }
 }
