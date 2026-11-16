@@ -1,0 +1,20 @@
+# RoadRunner configuration for a Worker that connects to Temporal Cloud with mTLS.
+version: "3"
+
+rpc:
+  listen: tcp://127.0.0.1:6001
+
+server:
+  command: "php worker.php"
+
+# @@@SNIPSTART php-client-rr-cloud-tls
+temporal:
+  address: <your-custom-namespace>.tmprl.cloud:7233
+  namespace: <your-custom-namespace>.<id>
+  tls:
+    # root_ca: 'certs/server-root-ca-cert.pem'
+    key: 'certs/client-private-key.pem'
+    cert: 'certs/client-cert.pem'
+    client_auth_type: require_and_verify_client_cert
+    # server_name: 'tls-sample'
+# @@@SNIPEND

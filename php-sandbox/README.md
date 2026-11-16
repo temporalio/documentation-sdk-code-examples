@@ -2,8 +2,8 @@
 
 Composer project for the PHP SDK docs code samples. The project root holds the
 [PHP SDK quickstart](https://docs.temporal.io/develop/php/set-up-your-local-php).
-Samples for other pages live in a folder per page, such as `workflows/basics/`
-or `activities/basics/`, and are autoloaded through the `classmap` entry in
+Samples for other pages live in a folder per page, such as `workflows/basics/`,
+`activities/basics/`, or `client/temporal-client/`, and are autoloaded through the `classmap` entry in
 `composer.json`.
 
 ## Quickstart
@@ -298,6 +298,29 @@ scheduled with, that a non-retryable exception isn't retried, that
 
 ```sh
 activities/timeouts/test.sh
+```
+
+## Temporal Client
+
+Samples for [Temporal Client](https://docs.temporal.io/develop/php/client/temporal-client)
+in `client/temporal-client/`. Snippet names start with `php-client-`.
+
+- `connect/` holds the scripts that create a connection (dev server, Temporal
+  Cloud with mTLS or an API key, RPC retry options, RPC timeout). They need the
+  `grpc` extension to run, so `phpstan.neon` checks them with PHPStan instead.
+- `rr-cloud.yaml` is the RoadRunner configuration for a Worker that connects to
+  Temporal Cloud with mTLS.
+- `ClientExamples.php` and `MoneyTransferExamples.php` hold the Client code that
+  takes an existing client. `test-client.php` runs it against a fake Temporal
+  Service.
+- `updates/` and `money-transfer/` hold the two `AccountTransferWorkflowInterface`
+  definitions from the page, with implementations that `worker.php` runs.
+
+`test.sh` runs the Workflows on a dev server and drives them with the Temporal
+CLI, then runs PHPStan, lints `rr-cloud.yaml`, and runs `test-client.php`.
+
+```sh
+client/temporal-client/test.sh
 ```
 
 ## Snipsync markers

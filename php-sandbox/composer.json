@@ -11,11 +11,15 @@
         },
         "classmap": [
             "workflows/",
-            "activities/"
+            "activities/",
+            "client/"
         ],
         "exclude-from-classmap": [
             "**/test.php",
             "**/test-client.php"
         ]
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1"
     }
 }
