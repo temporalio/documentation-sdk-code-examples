@@ -17,12 +17,12 @@ Workflow cancels the action.
 | File | Purpose |
 |---|---|
 | `workflow.py` | `HumanInTheLoopWorkflow`, its `approval_decision` Signal handler, and the agent's system instructions. |
-| `activities.py` | `create` (calls the OpenAI Responses API), `notify_approval_needed`, and `execute_action` Activities. |
+| `activities.py` | `create` (calls the OpenAI Responses API, or returns a mock action when `OPENAI_API_KEY` isn't set), `notify_approval_needed`, and `execute_action` Activities. |
 | `shared.py` | Shared Task Queue name and the Pydantic models passed between the Workflow, Activities, and clients. |
 | `worker.py` | Worker that connects via `ClientConfig.load_client_connect_config()` and hosts the Workflow and Activities. |
 | `client.py` | Starts the Workflow for a request and waits for the result. |
 | `send_approval.py` | Sends an approve or reject decision to a waiting Workflow as a Signal. |
-| `test_human_in_the_loop.py` | Runs the auto-approve, approve, reject, and timeout paths in a time-skipping test environment, with the OpenAI call mocked. |
+| `test_human_in_the_loop.py` | Runs the auto-approve, approve, reject, and timeout paths in a time-skipping test environment, with the OpenAI call mocked, plus a check of the no-API-key fallback. |
 | `config.toml` | Reference profiles (`default` for local, `cloud` for Temporal Cloud). |
 
 `load_client_connect_config()` (from `temporalio.envconfig`) reads:
@@ -41,11 +41,15 @@ The Task Queue defaults to `quickstart-human-in-the-loop`; set
 - Python 3.10 or later.
 - [uv](https://docs.astral.sh/uv/) (`pip install uv`). `uv sync` installs the
   dependencies pinned in `uv.lock`.
-- An OpenAI API key, exported in the Worker's terminal:
+- Optional: an OpenAI API key, exported in the Worker's terminal:
 
   ```bash
   export OPENAI_API_KEY='your-api-key-here'
   ```
+
+  Without a key, the `create` Activity skips OpenAI and returns a fixed, risky
+  `delete_test_data` action, so you can still run the full approval flow. The
+  Worker logs a warning when it uses the mock.
 
 ## Run against a local dev server
 
@@ -80,8 +84,9 @@ If the action is risky, the Worker prints how to approve or reject it.
 Result: Action completed successfully: Successfully executed: delete_test_data
 ```
 
-The `action_type` in the result comes from the model, so it can vary between
-runs. If you send no decision, the Workflow returns
+With an API key, the `action_type` in the result comes from the model, so it
+can vary between runs. Without one, the mock always proposes `delete_test_data`
+and always asks for approval, even for a safe request. If you send no decision, the Workflow returns
 `Action cancelled: approval request timed out after 300 seconds`.
 
 ## Run against Temporal Cloud

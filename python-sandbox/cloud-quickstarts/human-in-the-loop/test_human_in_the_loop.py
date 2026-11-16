@@ -4,10 +4,10 @@ from datetime import timedelta
 
 from temporalio import activity
 from temporalio.contrib.pydantic import pydantic_data_converter
-from temporalio.testing import WorkflowEnvironment
+from temporalio.testing import ActivityEnvironment, WorkflowEnvironment
 from temporalio.worker import Worker
 
-from activities import OpenAIResponsesRequest
+from activities import OpenAIResponsesRequest, create
 from shared import ApprovalDecision, ApprovalRequest, ProposedAction, WorkflowInput
 from workflow import HumanInTheLoopWorkflow
 
@@ -100,3 +100,13 @@ async def test_risky_action_is_rejected():
 async def test_risky_action_times_out_without_a_decision():
     result = await run_workflow(RISKY, timeout_seconds=1)
     assert "timed out after 1 seconds" in result
+
+
+async def test_create_returns_risky_mock_without_api_key(monkeypatch):
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    result = await ActivityEnvironment().run(
+        create, OpenAIResponsesRequest(model="gpt-4o-mini", instructions="", input="test")
+    )
+    action = ProposedAction.model_validate_json(result)
+    assert action.risky_action is True
+    assert action.action_type == "delete_test_data"

@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass
 
 from openai import AsyncOpenAI
@@ -13,9 +14,29 @@ class OpenAIResponsesRequest:
     input: str
 
 
+def mock_proposed_action(user_request: str) -> ProposedAction:
+    """A fixed, risky action used when no OpenAI API key is set, so the sample
+    runs end to end (including the approval step) without an LLM."""
+    return ProposedAction(
+        action_type="delete_test_data",
+        description=f"Mock action for the request: {user_request}",
+        reasoning="OPENAI_API_KEY is not set, so this action is mocked instead of LLM-generated.",
+        risky_action=True,
+    )
+
+
 @activity.defn
 async def create(request: OpenAIResponsesRequest) -> str:
-    """Call the OpenAI Responses API and return the text output."""
+    """Call the OpenAI Responses API and return the text output.
+
+    If OPENAI_API_KEY isn't set, return a mocked proposed action instead.
+    """
+    if not os.environ.get("OPENAI_API_KEY"):
+        activity.logger.warning(
+            "OPENAI_API_KEY is not set; returning a mock proposed action instead of calling OpenAI."
+        )
+        return mock_proposed_action(request.input).model_dump_json()
+
     # Let Temporal own retries: disable the OpenAI client's built-in retry logic.
     client = AsyncOpenAI(max_retries=0)
 
