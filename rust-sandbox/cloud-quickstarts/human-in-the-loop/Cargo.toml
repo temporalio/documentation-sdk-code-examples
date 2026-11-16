@@ -1,0 +1,25 @@
+[package]
+name = "human-in-the-loop"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1"
+# Formats Workflow and wall-clock times as ISO 8601 strings.
+chrono = { version = "0.4", default-features = false, features = ["std"] }
+futures = "0.3"
+# Calls the OpenAI Responses API from the propose_action Activity. Uses rustls with
+# the ring crypto provider, which the Temporal SDK already depends on.
+reqwest = { version = "0.13", default-features = false, features = ["http2", "json", "rustls-no-provider"] }
+rustls = { version = "0.23", default-features = false, features = ["ring"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+temporalio-client = "1.2.0"
+temporalio-common = "1.2.0"
+temporalio-macros = "1.2.0"
+temporalio-sdk = "1.2.0"
+temporalio-workflow = "1.2.0"
+tokio = { version = "1", features = ["full"] }
+
+[dev-dependencies]
+temporalio-sdk = { version = "1.2.0", features = ["testing"] }
