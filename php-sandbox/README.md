@@ -366,6 +366,27 @@ Updates, and runs `test-client.php` against a fake Temporal Service.
 platform/observability/test.sh
 ```
 
+## Enriching the UI
+
+Samples for [Enriching the user interface](https://docs.temporal.io/develop/php/platform/enriching-ui)
+in `platform/enriching-ui/`.
+
+| File | Snippet |
+|---|---|
+| `platform/enriching-ui/start-workflow.php` | `php-enriching-ui-start-workflow` |
+| `platform/enriching-ui/AsyncStart.php` | `php-enriching-ui-start-async` |
+| `platform/enriching-ui/TimerSummaryWorkflow.php` | `php-enriching-ui-timer-summary` |
+| `platform/enriching-ui/ActivitySummaryWorkflow.php` | `php-enriching-ui-activity-summary` |
+
+`test.sh` runs the Workflows on a dev server and checks the Timer and Activity
+summaries in the Event History, then runs `test-client.php`, which runs
+`start-workflow.php` against a fake Temporal Service and checks the static
+summary and details it sends.
+
+```sh
+platform/enriching-ui/test.sh
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
