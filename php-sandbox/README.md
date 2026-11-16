@@ -155,6 +155,22 @@ start of the Cron Workflow as already started, to exercise the `catch` block.
 php workflows/schedules/test.php
 ```
 
+## Side Effects
+
+Samples for [Side Effects](https://docs.temporal.io/develop/php/workflows/side-effects)
+in `workflows/side-effects/`.
+
+| File | Snippet |
+|---|---|
+| `workflows/side-effects/SideEffectWorkflow.php` | `php-side-effects` |
+
+`test.sh` runs the Workflow and checks that the random number is recorded in the
+Event History as a `SideEffect` Marker.
+
+```sh
+workflows/side-effects/test.sh
+```
+
 ## Timers
 
 Samples for [Timers](https://docs.temporal.io/develop/php/workflows/timers)
