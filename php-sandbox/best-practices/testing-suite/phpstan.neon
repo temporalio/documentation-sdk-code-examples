@@ -1,0 +1,11 @@
+# Static analysis for the Testing page code that can't run here: the PHPUnit
+# test case needs the grpc extension, and the bootstraps need the
+# temporal-test-server binary. Run from php-sandbox/:
+#   vendor/bin/phpstan analyse -c best-practices/testing-suite/phpstan.neon
+parameters:
+    level: 5
+    paths:
+        - tests/SimpleWorkflowTestCase.php
+        - tests/SimpleWorkflowFailureTestCase.php
+        - tests/bootstrap-optional-server.php
+        - ReplayExamples.php

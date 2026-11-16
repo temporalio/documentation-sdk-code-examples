@@ -387,6 +387,28 @@ summary and details it sends.
 platform/enriching-ui/test.sh
 ```
 
+## Testing
+
+Samples for [Testing](https://docs.temporal.io/develop/php/best-practices/testing-suite)
+in `best-practices/testing-suite/`, laid out like a project's `tests/` folder.
+Snippet names start with `php-testing-`.
+
+- `tests/worker.test.php` and `tests/.rr.test.yaml` run a Worker whose Activities
+  can be mocked with `ActivityMocker`.
+- `tests/SimpleWorkflowTestCase.php` and `tests/SimpleWorkflowFailureTestCase.php`
+  are the PHPUnit test cases, and `tests/bootstrap*.php` and `phpunit.xml` set
+  up the time-skipping test server. These need the `grpc` extension and the
+  `temporal-test-server` binary, so `phpstan.neon` checks them statically.
+- `ReplayExamples.php` holds the replay examples.
+
+`test.sh` runs the mocking Worker on a dev server and sets mocks the way the test
+case does, runs the replay examples (`tests/test-replay.php`), and runs the
+static checks.
+
+```sh
+best-practices/testing-suite/test.sh
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second

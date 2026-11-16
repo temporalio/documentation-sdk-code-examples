@@ -1,0 +1,6 @@
+# @@@SNIPSTART php-testing-gitignore
+temporal-test-server
+# @@@SNIPEND
+
+# Written by test.sh during the replay test
+tests/history.json
