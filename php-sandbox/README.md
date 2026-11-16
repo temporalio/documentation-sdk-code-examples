@@ -278,6 +278,28 @@ activities/asynchronous-activity/test.sh
 php activities/asynchronous-activity/test-client.php
 ```
 
+## Activity timeouts
+
+Samples for [Activity Timeouts](https://docs.temporal.io/develop/php/activities/timeouts)
+in `activities/timeouts/`.
+
+| File | Snippet |
+|---|---|
+| `activities/timeouts/TimeoutWorkflow.php` | `php-activity-timeouts-schedule-to-close` |
+| `activities/timeouts/RetryPolicyWorkflow.php` | `php-activity-timeouts-retry-policy` |
+| `activities/timeouts/RetryDelayActivity.php` | `php-activity-timeouts-next-retry-delay` |
+| `activities/timeouts/FileProcessingActivitiesImpl.php` | `php-activity-timeouts-heartbeat` |
+
+`Downloader.php` stands in for a client that downloads in chunks and reports
+progress. `test.sh` checks the timeouts and Retry Policy each Activity is
+scheduled with, that a non-retryable exception isn't retried, that
+`nextRetryDelay` replaces a 60-second retry interval, and that Heartbeats keep a
+5-second download alive past a 2-second Heartbeat Timeout.
+
+```sh
+activities/timeouts/test.sh
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
