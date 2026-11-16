@@ -2,8 +2,9 @@
 
 Composer project for the PHP SDK docs code samples. The project root holds the
 [PHP SDK quickstart](https://docs.temporal.io/develop/php/set-up-your-local-php).
-Samples for other pages live in a folder per page, such as `workflows/basics/`,
-and are autoloaded through the `classmap` entry in `composer.json`.
+Samples for other pages live in a folder per page, such as `workflows/basics/`
+or `activities/basics/`, and are autoloaded through the `classmap` entry in
+`composer.json`.
 
 ## Quickstart
 
@@ -184,6 +185,26 @@ in `workflows/timers/`.
 
 ```sh
 workflows/timers/test.sh
+```
+
+## Activity basics
+
+Samples for [Activity basics](https://docs.temporal.io/develop/php/activities/basics)
+in `activities/basics/`.
+
+| File | Snippet |
+|---|---|
+| `activities/basics/define/FileProcessingActivities.php` | `php-activity-basics-define` |
+| `activities/basics/return-primitive/GreetingActivity.php` | `php-activity-basics-return-primitive` |
+| `activities/basics/return-object/GreetingActivity.php` | `php-activity-basics-return-object` |
+| `activities/basics/custom-name/FileProcessingActivities.php` | `php-activity-basics-custom-name` |
+
+`test.sh` runs a test Workflow that calls each Activity Type by name, so it
+checks the default names, the `#[ActivityMethod]` name, the prefix, and the
+return values.
+
+```sh
+activities/basics/test.sh
 ```
 
 ## Snipsync markers
