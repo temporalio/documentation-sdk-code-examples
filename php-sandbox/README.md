@@ -255,6 +255,29 @@ php activities/execution/test-activities.php
 activities/execution/test.sh
 ```
 
+## Asynchronous Activity Completion
+
+Samples for [Asynchronous Activity Completion](https://docs.temporal.io/develop/php/activities/asynchronous-activity)
+in `activities/asynchronous-activity/`. The async-completion Activity is based on
+the samples-php `AsyncActivityCompletion` sample.
+
+| File | Snippet |
+|---|---|
+| `activities/asynchronous-activity/ParallelGreetingWorkflow.php` | `php-async-activity-parallel` |
+| `activities/asynchronous-activity/GreetingActivity.php` | `php-async-activity-complete-async` |
+| `activities/asynchronous-activity/ActivityCompletion.php` | `php-async-activity-complete-by-token`, `php-async-activity-fail-by-token` |
+
+`test.sh` runs the Workflows on a dev server: it checks that `Workflow::async`
+starts both coroutines' first Activities together, and that the async Activity
+stays open after its function returns until `temporal activity complete`
+completes it. `test-client.php` checks the completion and failure requests the
+Client code sends, against a fake Temporal Service.
+
+```sh
+activities/asynchronous-activity/test.sh
+php activities/asynchronous-activity/test-client.php
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
