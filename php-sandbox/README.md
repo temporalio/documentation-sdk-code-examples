@@ -3,7 +3,8 @@
 Composer project for the PHP SDK docs code samples. The project root holds the
 [PHP SDK quickstart](https://docs.temporal.io/develop/php/set-up-your-local-php).
 Samples for other pages live in a folder per page, such as `workflows/basics/`,
-`activities/basics/`, `client/temporal-client/`, or `workers/run-worker-process/`, and are autoloaded through the `classmap` entry in
+`activities/basics/`, `client/temporal-client/`, `workers/run-worker-process/`, or
+`platform/observability/`, and are autoloaded through the `classmap` entry in
 `composer.json`.
 
 ## Quickstart
@@ -343,6 +344,26 @@ the finalizer ran after each Activity.
 
 ```sh
 workers/run-worker-process/test.sh
+```
+
+## Observability
+
+Samples for [Observability](https://docs.temporal.io/develop/php/platform/observability)
+in `platform/observability/`. Snippet names start with `php-observability-`.
+
+- `MyWorkflow.php` logs with `Workflow::getLogger()`. `WorkerSetup.php` holds
+  the Worker examples (logging in replay, a custom PSR-3 logger in
+  `MyLogger.php`). `worker.php` and `worker-custom-logger.php` run them.
+- `OrderWorkflow.php` holds the Update handlers that upsert and remove a Search
+  Attribute. `ClientExamples.php` lists Workflows and starts one with Search
+  Attributes.
+
+`test.sh` starts a dev server with the `DestinationTime` and `OrderId` Search
+Attributes, runs both Workers, checks the log output and the Search Attribute
+Updates, and runs `test-client.php` against a fake Temporal Service.
+
+```sh
+platform/observability/test.sh
 ```
 
 ## Snipsync markers

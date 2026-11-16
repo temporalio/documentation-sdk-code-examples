@@ -1,0 +1,14 @@
+# RoadRunner configuration for worker-custom-logger.php. Used by test.sh.
+version: "3"
+
+rpc:
+  listen: tcp://127.0.0.1:${RR_RPC_PORT_2:-6003}
+
+server:
+  command: "php worker-custom-logger.php"
+
+temporal:
+  address: ${TEMPORAL_ADDRESS:-127.0.0.1:7233}
+
+logs:
+  level: info
