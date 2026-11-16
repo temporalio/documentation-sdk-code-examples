@@ -17,7 +17,7 @@ Workflow cancels the action.
 | File | Purpose |
 |---|---|
 | `workflow.py` | `HumanInTheLoopWorkflow`, its `approval_decision` Signal handler, and the agent's system instructions. |
-| `activities.py` | `create` (calls the OpenAI Responses API, or returns a mock action when `OPENAI_API_KEY` isn't set), `notify_approval_needed`, and `execute_action` Activities. |
+| `activities.py` | `create` (asks the OpenAI Responses API for a structured `ProposedAction`, or returns a mock action when `OPENAI_API_KEY` isn't set), `notify_approval_needed`, and `execute_action` Activities. |
 | `shared.py` | Shared Task Queue name and the Pydantic models passed between the Workflow, Activities, and clients. |
 | `worker.py` | Worker that connects via `ClientConfig.load_client_connect_config()` and hosts the Workflow and Activities. |
 | `client.py` | Starts the Workflow for a request and waits for the result. |

@@ -26,8 +26,8 @@ def mock_proposed_action(user_request: str) -> ProposedAction:
 
 
 @activity.defn
-async def create(request: OpenAIResponsesRequest) -> str:
-    """Call the OpenAI Responses API and return the text output.
+async def create(request: OpenAIResponsesRequest) -> ProposedAction:
+    """Ask the LLM for a proposed action and return it as a ProposedAction.
 
     If OPENAI_API_KEY isn't set, return a mocked proposed action instead.
     """
@@ -35,19 +35,27 @@ async def create(request: OpenAIResponsesRequest) -> str:
         activity.logger.warning(
             "OPENAI_API_KEY is not set; returning a mock proposed action instead of calling OpenAI."
         )
-        return mock_proposed_action(request.input).model_dump_json()
+        return mock_proposed_action(request.input)
 
     # Let Temporal own retries: disable the OpenAI client's built-in retry logic.
     client = AsyncOpenAI(max_retries=0)
 
-    resp = await client.responses.create(
+    # Structured outputs: the API constrains the response to ProposedAction's
+    # JSON schema, and the SDK parses it into the model.
+    resp = await client.responses.parse(
         model=request.model,
         instructions=request.instructions,
         input=request.input,
+        text_format=ProposedAction,
         timeout=30,
     )
 
-    return resp.output_text
+    # Parse here, not in the Workflow: if the output is unusable, this Activity
+    # attempt fails and Temporal retries the LLM call. Raising in Workflow code
+    # would instead fail the Workflow Task and replay the same bad result.
+    if resp.output_parsed is None:
+        raise ValueError(f"LLM returned no parsable ProposedAction: {resp.output_text!r}")
+    return resp.output_parsed
 
 
 @activity.defn

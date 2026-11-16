@@ -105,7 +105,7 @@ class HumanInTheLoopWorkflow:
             )
 
     async def _propose_action(self, user_request: str) -> ProposedAction:
-        result = await workflow.execute_activity(
+        return await workflow.execute_activity(
             create,
             OpenAIResponsesRequest(
                 model="gpt-4o-mini",
@@ -114,7 +114,6 @@ class HumanInTheLoopWorkflow:
             ),
             start_to_close_timeout=timedelta(seconds=30),
         )
-        return ProposedAction.model_validate_json(result)
 
     async def _execute(self, action: ProposedAction) -> str:
         return await workflow.execute_activity(

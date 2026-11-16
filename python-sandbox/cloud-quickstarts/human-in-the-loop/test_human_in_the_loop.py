@@ -29,8 +29,8 @@ def mock_create(action: ProposedAction):
     """Stand-in for the OpenAI Activity, so the tests need no API key."""
 
     @activity.defn(name="create")
-    async def create(request: OpenAIResponsesRequest) -> str:
-        return action.model_dump_json()
+    async def create(request: OpenAIResponsesRequest) -> ProposedAction:
+        return action
 
     return create
 
@@ -116,6 +116,5 @@ async def test_create_returns_risky_mock_without_api_key(monkeypatch):
     result = await ActivityEnvironment().run(
         create, OpenAIResponsesRequest(model="gpt-4o-mini", instructions="", input="test")
     )
-    action = ProposedAction.model_validate_json(result)
-    assert action.risky_action is True
-    assert action.action_type == "delete_test_data"
+    assert result.risky_action is True
+    assert result.action_type == "delete_test_data"
