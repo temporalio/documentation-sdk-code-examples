@@ -186,6 +186,32 @@ in `workflows/timers/`.
 workflows/timers/test.sh
 ```
 
+## Versioning
+
+Samples for [Versioning](https://docs.temporal.io/develop/php/workflows/versioning)
+in `workflows/versioning/`. Each revision of `MyWorkflow` is in its own folder
+and namespace, and all of them have the Workflow Type `MyWorkflow`.
+
+| File | Snippet |
+|---|---|
+| `workflows/versioning/pre-patch/MyWorkflow.php` | `php-versioning-pre-patch` |
+| `workflows/versioning/patched/MyWorkflow.php` | `php-versioning-patched` |
+| `workflows/versioning/another-patch/MyWorkflow.php` | `php-versioning-another-patch` |
+| `workflows/versioning/min-supported-1/MyWorkflow.php` | `php-versioning-min-supported-1` |
+| `workflows/versioning/min-supported-2/MyWorkflow.php` | `php-versioning-min-supported-2` |
+| `workflows/versioning/cutover/MyWorkflow.php` | `php-versioning-cutover-workflows` |
+| `workflows/versioning/worker.php` | `php-versioning-cutover-worker` |
+
+`worker.php` registers the revision named by the `VERSIONING_REVISION`
+environment variable. `test.sh` runs each revision in turn, saves an Event
+History from each, and replays the older histories against the newer revisions
+with `replay.php` (the SDK's `WorkflowReplayer`, which talks to RoadRunner over
+its RPC port).
+
+```sh
+workflows/versioning/test.sh
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
