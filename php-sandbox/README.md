@@ -233,6 +233,28 @@ its RPC port).
 workflows/versioning/test.sh
 ```
 
+## Activity Execution
+
+Samples for [Activity Execution](https://docs.temporal.io/develop/php/activities/execution)
+in `activities/execution/`. The Greeting examples reuse the Greeting Activity
+from `activities/basics/return-primitive/`.
+
+| File | Snippet |
+|---|---|
+| `activities/execution/FileProcessingActivitiesImpl.php` | `php-activity-execution-implementation` |
+| `activities/execution/GreetingWorkflow.php` | `php-activity-execution-get-result` |
+| `activities/execution/MultipleStubsWorkflow.php` | `php-activity-execution-multiple-stubs` |
+
+The S3 Activities use the AWS SDK for PHP (`aws/aws-sdk-php`).
+`test-activities.php` calls them with an `S3Client` whose HTTP handler is the
+SDK's `MockHandler`, so it needs no AWS account. `test.sh` runs the Workflows
+and checks each Activity's Start-To-Close Timeout.
+
+```sh
+php activities/execution/test-activities.php
+activities/execution/test.sh
+```
+
 ## Snipsync markers
 
 The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
