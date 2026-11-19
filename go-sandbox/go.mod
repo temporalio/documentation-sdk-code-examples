@@ -2,7 +2,7 @@ module my-org/quickstart
 
 go 1.26.0
 
-require go.temporal.io/sdk v1.49.0
+require go.temporal.io/sdk v1.51.0
 
 require github.com/uber-go/tally/v4 v4.1.1
 
@@ -180,7 +180,7 @@ require (
 	go.opentelemetry.io/otel v1.47.0
 	go.opentelemetry.io/otel/metric v1.47.0 // indirect
 	go.opentelemetry.io/otel/trace v1.47.0 // indirect
-	go.temporal.io/api v1.63.5
+	go.temporal.io/api v1.64.3
 	go.temporal.io/sdk/contrib/opentelemetry v0.8.1
 	go.temporal.io/sdk/contrib/tally v0.2.0
 	go.uber.org/atomic v1.11.0 // indirect
