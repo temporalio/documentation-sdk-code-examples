@@ -1,0 +1,10 @@
+<configuration>
+    <!-- @@@SNIPSTART java-opentelemetry-v2-logback-config -->
+    <appender name="OpenTelemetry"
+              class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender"/>
+
+    <root level="INFO">
+        <appender-ref ref="OpenTelemetry"/>
+    </root>
+    <!-- @@@SNIPEND -->
+</configuration>
