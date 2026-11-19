@@ -1,0 +1,225 @@
+name: Check SDK versions
+
+# Compares the Temporal SDK version each *-sandbox/ folder builds with (from
+# its lockfile where one exists) against the latest stable release of the
+# matching temporalio/sdk-<language> repo. Outdated SDKs don't fail the check
+# job; they go to the upgrade job. When everything is current, the run ends
+# after the check.
+#
+# The upgrade job bumps the outdated sandboxes and opens (or refreshes) a PR
+# from docs/sdk-version-upgrades into the default branch, on every trigger;
+# manual runs can skip it with the create_pr input. The upgrade PR only ever
+# changes the manifests and lockfiles that hold SDK versions: it's built on
+# the default branch (even when triggered from a PR or another branch, whose
+# copy of the upgrade script is what runs), and the script reverts and leaves
+# out any other file an upgrade tool touches.
+# A language whose upgrade fails is left out of the PR, and scheduled runs
+# open a tracking issue for it.
+#
+# Token: PRs opened and pushes made with the default GITHUB_TOKEN don't
+# trigger other workflows, so the compile check in ci-on-pr.yml won't run on
+# the upgrade PR. Add an SDK_UPGRADE_TOKEN secret (a fine-grained PAT or
+# GitHub App token with Contents and Pull requests write access) so CI runs.
+# Without it the workflow falls back to GITHUB_TOKEN, which needs "Allow
+# GitHub Actions to create and approve pull requests" enabled in the repo's
+# Actions settings.
+#
+# Not a PR check: a new upstream SDK release would otherwise turn every open
+# PR red. Runs on PRs only when the check itself changes.
+
+on:
+  pull_request:
+    paths:
+      - ".github/scripts/check-sdk-versions.py"
+      - ".github/workflows/check-sdk-versions.yml"
+  schedule:
+    # Weekly, Monday morning UTC.
+    - cron: "23 8 * * 1"
+  # Manual run: Actions tab > Check SDK versions > Run workflow, or
+  # `gh workflow run check-sdk-versions.yml [-f create_pr=false]`.
+  workflow_dispatch:
+    inputs:
+      create_pr:
+        description: Open or update an upgrade PR if any SDK is outdated (uncheck to only report)
+        type: boolean
+        default: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  UPGRADE_BRANCH: docs/sdk-version-upgrades
+
+jobs:
+  check:
+    name: Check SDK versions
+    runs-on: ubuntu-latest
+    outputs:
+      # ok | outdated | error, and the outdated language slugs (e.g. "go java")
+      status: ${{ steps.check.outputs.status }}
+      languages: ${{ steps.check.outputs.languages }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.13"
+      - name: Compare against latest SDK releases
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        # Exit 1 means some SDKs are outdated: that's a result, not a failure,
+        # so pass it to the upgrade job. Exit 2 (a version couldn't be read
+        # or fetched) still fails the job.
+        run: |
+          set +e
+          python .github/scripts/check-sdk-versions.py
+          code=$?
+          if [ "$code" -eq 1 ]; then exit 0; fi
+          exit "$code"
+
+  upgrade:
+    name: Open upgrade PR
+    needs: check
+    # Skipped, ending the run, when every SDK is up to date.
+    if: >-
+      needs.check.outputs.status == 'outdated'
+      && (github.event_name != 'workflow_dispatch' || inputs.create_pr)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # The upgrade is always built on the default branch, so the PR's diff is
+      # only the version bumps, never the triggering branch's other changes.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          # Full history, to spot human commits on an existing upgrade branch.
+          fetch-depth: 0
+          token: ${{ secrets.SDK_UPGRADE_TOKEN || github.token }}
+      # The upgrade script from the commit that triggered the run, so changes
+      # to it can be tried from a PR before they're merged.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          path: .sdk-upgrade-tool
+          sparse-checkout: .github/scripts
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.13"
+
+      # Toolchains to regenerate lockfiles, only for languages being upgraded.
+      # .NET and Java need none: their versions live in .csproj and pom.xml.
+      - if: contains(needs.check.outputs.languages, 'go')
+        uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5.6.0
+        with:
+          go-version-file: go-sandbox/go.mod
+          cache-dependency-path: go-sandbox/go.sum
+      - if: contains(needs.check.outputs.languages, 'typescript')
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: typescript-sandbox/.nvmrc
+      - if: contains(needs.check.outputs.languages, 'python')
+        run: python -m pip install uv
+      - if: contains(needs.check.outputs.languages, 'php')
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: "8.5"
+          tools: composer
+      - if: contains(needs.check.outputs.languages, 'ruby')
+        uses: ruby/setup-ruby@b3aaceaef7e0ee231b499e7b5f49c03fc1d32199 # v1.338.0
+        with:
+          ruby-version: "3.3"
+      - if: contains(needs.check.outputs.languages, 'rust')
+        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
+        with:
+          toolchain: stable
+
+      - name: Upgrade outdated SDKs
+        id: upgrade
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        # Runs in the default-branch checkout. --files lists the version files
+        # it changed; everything else it reverts.
+        run: >-
+          python .sdk-upgrade-tool/.github/scripts/check-sdk-versions.py --upgrade
+          --pr-body "$RUNNER_TEMP/pr-body.md"
+          --files "$RUNNER_TEMP/upgrade-files.txt"
+
+      - name: Open or update the upgrade PR
+        if: steps.upgrade.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.SDK_UPGRADE_TOKEN || github.token }}
+          BASE: ${{ github.event.repository.default_branch }}
+          TITLE: ${{ steps.upgrade.outputs.title }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          bot_email="41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "$bot_email"
+          existing="$(gh pr list --head "$UPGRADE_BRANCH" --state open --json number --jq '.[0].number // empty')"
+
+          # The branch is rebuilt from scratch each run. Don't force-push over
+          # fixes someone pushed to it (e.g. code changes for a breaking release).
+          # Only commits after the bot's last upgrade commit count, so commits
+          # it was built on aren't mistaken for fixes.
+          if git ls-remote --exit-code --heads origin "$UPGRADE_BRANCH" >/dev/null; then
+            # Exact match: --author is a regex, and the email has [ ] and +.
+            last_bot="$(git log "origin/$UPGRADE_BRANCH" --format='%H %ae' | awk -v e="$bot_email" '$2 == e { print $1; exit }')"
+            human="$(git log "${last_bot:-origin/$BASE}..origin/$UPGRADE_BRANCH" --format=%ae | grep -vxF "$bot_email" || true)"
+            if [ -n "$human" ]; then
+              msg="New Temporal SDK releases are available, but $UPGRADE_BRANCH has commits from people, so this run didn't overwrite it. Merge or close the PR to get the next upgrade. Run: $RUN_URL"
+              echo "::warning::$msg"
+              if [ -n "$existing" ]; then gh pr comment "$existing" --body "$msg"; fi
+              exit 0
+            fi
+          fi
+
+          git switch -C "$UPGRADE_BRANCH"
+          # Stage only the version files the upgrade reported, nothing else.
+          git add --pathspec-from-file="$RUNNER_TEMP/upgrade-files.txt"
+          echo "Committing:"; git diff --cached --name-only
+          git commit -m "$TITLE" -m "Opened by the Check SDK versions workflow: $RUN_URL"
+          git push --force origin "$UPGRADE_BRANCH"
+
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --title "$TITLE" --body-file "$RUNNER_TEMP/pr-body.md"
+          else
+            gh pr create --base "$BASE" --head "$UPGRADE_BRANCH" --title "$TITLE" --body-file "$RUNNER_TEMP/pr-body.md"
+          fi
+
+      - name: Fail if a language couldn't be upgraded
+        if: steps.upgrade.outputs.failed == 'true'
+        run: |
+          echo "::error::At least one SDK couldn't be upgraded automatically. See the step summary."
+          exit 1
+
+  report:
+    name: Report scheduled failure
+    needs: [check, upgrade]
+    # Being out of date isn't reported here; the upgrade PR covers that.
+    if: >-
+      always()
+      && github.event_name == 'schedule'
+      && (needs.check.outputs.status == 'error' || needs.upgrade.result == 'failure')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Open or update a tracking issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Temporal SDK version check or upgrade failed"
+          existing="$(gh issue list --state open --search "in:title \"$title\"" --json number --jq '.[0].number')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Failed again: $RUN_URL"
+          else
+            gh issue create --title "$title" --body "The weekly SDK version check couldn't read a version, or couldn't upgrade an outdated SDK automatically. The run summary has the details. Run: $RUN_URL"
+          fi
