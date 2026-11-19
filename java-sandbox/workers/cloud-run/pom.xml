@@ -18,25 +18,25 @@
         <dependency>
             <groupId>io.temporal</groupId>
             <artifactId>temporal-sdk</artifactId>
-            <version>1.40.0</version>
+            <version>1.41.1</version>
         </dependency>
 
         <dependency>
             <groupId>io.temporal</groupId>
             <artifactId>temporal-envconfig</artifactId>
-            <version>1.40.0</version>
+            <version>1.41.1</version>
         </dependency>
 
         <dependency>
             <groupId>io.temporal</groupId>
             <artifactId>temporal-gcp-cloud-run-opentelemetry</artifactId>
-            <version>1.40.0</version>
+            <version>1.41.1</version>
         </dependency>
 
         <dependency>
             <groupId>io.temporal</groupId>
             <artifactId>temporal-gcp-cloud-run-id</artifactId>
-            <version>1.40.0</version>
+            <version>1.41.1</version>
         </dependency>
 
         <dependency>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>io.temporal</groupId>
             <artifactId>temporal-testing</artifactId>
-            <version>1.40.0</version>
+            <version>1.41.1</version>
             <scope>test</scope>
         </dependency>
 
