@@ -1,4 +1,6 @@
+import asyncio
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -16,6 +18,8 @@ from temporal_client import (
     load_profile_with_overrides,
     mtls_connect,
     start_workflow,
+    sync_asyncio_run,
+    sync_background_loop,
 )
 from temporal_client.your_workflows import YourWorkflow
 
@@ -139,3 +143,45 @@ async def test_connect_with_mtls_and_rotate_cert(env, connect_calls, monkeypatch
         await cloud_connect.rotate_client_cert(worker)
         assert connect_calls[1][1]["tls"].client_cert == b"client-cert-new bytes"
         assert worker.client is not env.client
+
+
+@pytest.mark.asyncio
+async def test_sync_asyncio_run(env, connect_calls, capsys):
+    # Call the sync function from a thread with no running event loop, as sync code would.
+    await asyncio.to_thread(sync_asyncio_run.start_from_sync_code, "sync-run")
+    assert "Started Workflow your-workflow-sync-run" in capsys.readouterr().out
+    description = await env.client.get_workflow_handle("your-workflow-sync-run").describe()
+    assert description.workflow_type == "YourWorkflow"
+
+
+@pytest.mark.asyncio
+@pytest.mark.filterwarnings("ignore:coroutine .* was never awaited:RuntimeWarning")
+async def test_sync_asyncio_run_fails_inside_running_loop(connect_calls):
+    with pytest.raises(RuntimeError, match="cannot be called from a running event loop"):
+        sync_asyncio_run.start_from_sync_code("inside-loop")
+    assert connect_calls == []
+
+
+@pytest.mark.asyncio
+async def test_sync_background_loop_main(env, connect_calls, capsys):
+    await asyncio.to_thread(sync_background_loop.main)
+    out = capsys.readouterr().out
+    assert "Started Workflow your-workflow-alice" in out
+    assert "Started Workflow your-workflow-bob" in out
+    assert len(connect_calls) == 1
+
+
+@pytest.mark.asyncio
+async def test_sync_background_loop_from_many_threads(env, connect_calls):
+    names = [f"thread-{i}" for i in range(16)]
+
+    def start_from_threads():
+        temporal = sync_background_loop.TemporalClientThread("localhost:7233")
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            return list(
+                pool.map(lambda name: sync_background_loop.start_from_sync_code(temporal, name), names)
+            )
+
+    workflow_ids = await asyncio.to_thread(start_from_threads)
+    assert workflow_ids == [f"your-workflow-{name}" for name in names]
+    assert len(connect_calls) == 1
