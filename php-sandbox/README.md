@@ -411,6 +411,7 @@ best-practices/testing-suite/test.sh
 
 ## Snipsync markers
 
-The PHP files start with `<?php // @@@SNIPSTART ... ?>` followed by a second
-`<?php`, so the snippet on the docs page includes the opening tag. See
+The PHP files put the Snipsync start marker inside a `<?php ... ?>` first line,
+followed by a second `<?php`, so the snippet on the docs page includes the
+opening tag. See
 [Snipsync markers](../README.md#snipsync-markers).

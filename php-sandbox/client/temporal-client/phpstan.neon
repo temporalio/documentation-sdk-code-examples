@@ -5,8 +5,9 @@
 #   vendor/bin/phpstan analyse -c client/temporal-client/phpstan.neon
 #
 # The Workflow interfaces aren't analysed directly: PHPStan reports their
-# `<?php // @@@SNIPSTART ... ?>` first line as "declare(strict_types) must be
-# the very first statement", but PHP itself still enforces strict types there.
+# first line, which holds the Snipsync start marker inside `<?php ... ?>`, as
+# "declare(strict_types) must be the very first statement", but PHP itself
+# still enforces strict types there.
 parameters:
     level: 5
     paths:
