@@ -1,3 +1,4 @@
 payload-store/
 .bundle/
 vendor/
+Gemfile.lock
