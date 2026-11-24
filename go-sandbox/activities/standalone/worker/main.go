@@ -26,5 +26,4 @@ func main() {
 		log.Fatalln("Unable to start Worker", err)
 	}
 }
-
 // @@@SNIPEND

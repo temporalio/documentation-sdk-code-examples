@@ -14,5 +14,4 @@ const (
 func Activity(ctx context.Context, name string) (string, error) {
 	return fmt.Sprintf("Hello %s!", name), nil
 }
-
 // @@@SNIPEND
