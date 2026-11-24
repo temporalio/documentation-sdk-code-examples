@@ -1,3 +1,4 @@
+// @@@SNIPSTART go-standalone-activity-quickstart-activity
 package standalone
 
 import (
@@ -13,3 +14,5 @@ const (
 func Activity(ctx context.Context, name string) (string, error) {
 	return fmt.Sprintf("Hello %s!", name), nil
 }
+
+// @@@SNIPEND
