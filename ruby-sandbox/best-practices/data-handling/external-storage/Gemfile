@@ -1,0 +1,7 @@
+source 'https://rubygems.org'
+
+# Unreleased public API: replace this pin with a published version after SDK release.
+gem 'temporalio', git: 'https://github.com/temporalio/sdk-ruby.git',
+    ref: 'b0f24ba3da8b58c58b50929095a94932c88e3177', glob: 'temporalio/*.gemspec', submodules: true
+gem 'aws-sdk-s3'
+gem 'minitest', '~> 5.25'
