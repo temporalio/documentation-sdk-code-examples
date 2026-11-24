@@ -141,22 +141,29 @@ docs. The `.mdx` page in the `documentation` repo has
 `<!--SNIPSTART name-->` / `<!--SNIPEND-->`, and Snipsync copies the code with the
 same name into it.
 
-```java
-// @@@SNIPSTART java-s3-driver-create
+<!--
+  The marker examples below are HTML <pre> blocks that spell the first @ as
+  &#64;. Snipsync reads every file in this repo, including Markdown, and treats
+  any line with the literal marker text as a real snippet. Keep the entity so
+  these examples don't register snippets.
+-->
+
+<pre>
+// &#64;@@SNIPSTART java-example-name
 S3AsyncClient s3Client = S3AsyncClient.builder().region(Region.US_EAST_2).build();
-// @@@SNIPEND
-```
+// &#64;@@SNIPEND
+</pre>
 
 - Use `#` instead of `//` for Python and Ruby.
 - In PHP, Snipsync leaves out the marker line, and nothing can come before
   `<?php`. To include `<?php` in a whole-file snippet, put the marker on the
   first line and reopen the tag on the next line:
 
-  ```php
-  <?php // @@@SNIPSTART php-quickstart-worker ?>
-  <?php
+  <pre>
+  &lt;?php // &#64;@@SNIPSTART php-example-name ?&gt;
+  &lt;?php
   declare(strict_types=1);
-  ```
+  </pre>
 
   The closing `?>` swallows its newline, so the file prints nothing and
   `declare(strict_types=1)` still works.

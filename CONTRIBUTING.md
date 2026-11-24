@@ -48,12 +48,19 @@ snippet **name is the join key** — the docs repo has a `<!--SNIPSTART name-->`
 `<!--SNIPEND-->` placeholder in the target `.mdx` page, and Snipsync (run on the
 docs-repo side) copies the code across by matching names.
 
-```java
-// @@@SNIPSTART java-s3-driver-create
+<!--
+  This example is an HTML <pre> block that spells the first @ as &#64;.
+  Snipsync reads every file in this repo, including Markdown, and treats any
+  line with the literal marker text as a real snippet. Keep the entity so the
+  example doesn't register a snippet.
+-->
+
+<pre>
+// &#64;@@SNIPSTART java-example-name
 S3AsyncClient s3Client = S3AsyncClient.builder().region(Region.US_EAST_2).build();
 ...
-// @@@SNIPEND
-```
+// &#64;@@SNIPEND
+</pre>
 
 Use `#` instead of `//` for Python and Ruby. Naming convention: `<language>-<topic>-<detail>`,
 e.g. `java-s3-driver-create` (see
