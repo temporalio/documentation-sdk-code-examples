@@ -28,7 +28,7 @@ def configure(config: ModalWorkerConfig) -> None:
 
 @app.function(
     timeout=int(FUNCTION_TIMEOUT.total_seconds()),
-    secrets=[modal.Secret.from_name("temporal")],
+    secrets=[modal.Secret.from_name("temporal-cloud-credentials")],
 )
 async def temporal_worker() -> None:
     await run_worker(
