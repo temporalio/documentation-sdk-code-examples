@@ -123,6 +123,13 @@ jobs:
           done
           exit $status
 
+      - name: Install External Storage sample dependencies
+        working-directory: ruby-sandbox/best-practices/data-handling/external-storage
+        run: bundle install
+      - name: Test External Storage round trip
+        working-directory: ruby-sandbox/best-practices/data-handling/external-storage
+        run: bundle exec ruby integration_test.rb
+
   rust:
     name: Rust
     runs-on: ubuntu-latest
